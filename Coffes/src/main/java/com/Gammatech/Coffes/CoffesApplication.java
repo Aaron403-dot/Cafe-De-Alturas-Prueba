@@ -1,4 +1,4 @@
-package com.Gammatech.Coffes.Persistance;
+package com.Gammatech.Coffes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

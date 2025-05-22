@@ -18,28 +18,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.Gammatech.Coffes.Entities.Coffe;
 
 
 
 /**
  *
- * @author Usuario
+ * @author Aaron del Cristo Suarez Suarez
  */
 
 @RestController
 public class CoffeShopController {
 	
-	private List<Coffe> coffes = new ArrayList<>();
+	private static List<Coffe> coffes = new ArrayList<>();
 	
 
-	@GetMapping("/Coffes")
+	@GetMapping("/coffes")
 	public ResponseEntity<List<Coffe>> getListaCoffe() {
 		return ResponseEntity.status(200).body(coffes);
 	}
 	
-	@PostMapping("/Coffes")
+	@PostMapping("/coffes")
 	public ResponseEntity<Coffe> postMethodName(@RequestBody Coffe entity) {
 		if(entity == null) {
 			return ResponseEntity.status(400).build();
@@ -53,11 +52,12 @@ public class CoffeShopController {
 		if(entity.getDescription() == null || entity.getDescription().isEmpty()) {
 			return ResponseEntity.status(400).build();
 		}
+		entity.setId(coffes.size()+1l);
 		coffes.add(entity);
 		return ResponseEntity.status(201).body(entity);
 	}
 	
-	@PutMapping("/Coffes/{id}")
+	@PutMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> putMethodName(@PathVariable int id, @RequestBody Coffe entity) {
 		if(entity == null) {
 			return ResponseEntity.status(400).build();
@@ -66,7 +66,7 @@ public class CoffeShopController {
 		return ResponseEntity.status(200).body(entity);
 	}
 
-	@DeleteMapping("/Coffes/{id}")
+	@DeleteMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> deleteMethodName(@PathVariable int id) {
 		if(coffes.size() == 0) {
 			return ResponseEntity.status(204).build();
@@ -81,7 +81,7 @@ public class CoffeShopController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	@PatchMapping("/Coffes/{id}")
+	@PatchMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> patchMethodName(@PathVariable int id, @RequestBody Coffe entity) {
 		if(id < 0 || id >= coffes.size()) {
 			return ResponseEntity.status(404).build();

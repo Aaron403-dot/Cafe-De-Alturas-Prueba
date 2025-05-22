@@ -7,7 +7,7 @@ package com.Gammatech.Coffes.Entities;
 
 /**
  *
- * @author Usuario
+ * @author Aaron del Cristo Suarez Suarez
  */
 
 public class Coffe {
@@ -21,10 +21,11 @@ public class Coffe {
 
 
     public Coffe() {
+    	
     }
 
     public Coffe(Long id, String name, String description, double price, int stock, String image) {
-        this.id = id;
+        this.id = id + 1l;
         this.name = name;
         this.description = description;
         this.price = price;
