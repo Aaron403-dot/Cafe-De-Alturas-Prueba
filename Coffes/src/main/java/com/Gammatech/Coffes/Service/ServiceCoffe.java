@@ -61,6 +61,9 @@ public class ServiceCoffe {
             coffe.getDescription() == null || coffe.getDescription().isEmpty()) {
             throw new IllegalArgumentException("El café no puede ser nulo o tener campos vacíos");
         }
+        if(repoCoffe.findAll() == null || repoCoffe.findAll().isEmpty()) {
+            throw new EmptyStackException();
+        }
         
         return repoCoffe.save(coffe);
     }
@@ -79,7 +82,7 @@ public class ServiceCoffe {
 
     public Coffe patchCoffe(long id, Coffe coffe) {
         Coffe nCoffe = repoCoffe.findById(id).orElseThrow(() -> 
-            new IllegalArgumentException("No se puede modificar el café. ID inválido"));
+            new EmptyStackException());
         
         if (coffe.getName() != null && !coffe.getName().isEmpty() && !coffe.getName().isBlank() && !nCoffe.getName().equals(coffe.getName())) {
             nCoffe.setName(coffe.getName());

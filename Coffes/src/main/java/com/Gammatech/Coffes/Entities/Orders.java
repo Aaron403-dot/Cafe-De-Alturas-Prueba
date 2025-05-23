@@ -11,7 +11,7 @@ import java.util.Map;
 public class Orders {
     private Long id;
     private Long clientId;
-    private Map<Coffe, Integer> cafes; // Map donde la key es el café y el value es la cantidad
+    private Map<CoffeeSimplyfied, Integer> cafes; // Map donde la key es el café y el value es la cantidad
     private double precioTotal;
     private LocalDateTime fechaOrden;
     private String estado; // PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA
@@ -23,17 +23,16 @@ public class Orders {
     }
     
     // Constructor con parámetros básicos
-    public Orders(Long id, Long clientId, double precioTotal, String estado) {
+    public Orders(Long id, Long clientId, String estado) {
         this.id = id;
         this.clientId = clientId;
         this.cafes = new HashMap<>();
-        this.precioTotal = precioTotal;
         this.estado = estado;
         this.fechaOrden = LocalDateTime.now();
     }
     
     // Método para agregar un café a la orden
-    public void agregarCafe(Coffe cafe, int cantidad) {
+    public void agregarCafe(CoffeeSimplyfied cafe, int cantidad) {
         if (this.cafes == null) {
             this.cafes = new HashMap<>();
         }
@@ -42,9 +41,9 @@ public class Orders {
     }
     
     // Método para calcular el precio total
-    private void calcularPrecioTotal() {
+    public void calcularPrecioTotal() {
         this.precioTotal = this.cafes.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
+                .mapToDouble(entry -> entry.getKey().getPrecio() * entry.getValue())
                 .sum();
     }
     
@@ -65,11 +64,11 @@ public class Orders {
         this.clientId = clientId;
     }
 
-    public Map<Coffe, Integer> getCafes() {
+    public Map<CoffeeSimplyfied, Integer> getCafes() {
         return cafes;
     }
 
-    public void setCafes(Map<Coffe, Integer> cafes) {
+    public void setCafes(Map<CoffeeSimplyfied, Integer> cafes) {
         this.cafes = cafes;
         this.calcularPrecioTotal();
     }

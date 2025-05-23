@@ -7,9 +7,12 @@ package com.Gammatech.Coffes.Service;
 
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.Gammatech.Coffes.Entities.Coffe;
+import com.Gammatech.Coffes.Entities.CoffeeSimplyfied;
 import com.Gammatech.Coffes.Entities.Orders;
 import com.Gammatech.Coffes.Repo.RepoOrder;
 
@@ -21,9 +24,38 @@ import com.Gammatech.Coffes.Repo.RepoOrder;
 public class ServiceOrders {
 
     private final RepoOrder repoOrder;
+    private final ServiceCoffe serviceCoffe;
 
-    public ServiceOrders(RepoOrder repoOrder) {
+    public ServiceOrders(RepoOrder repoOrder, ServiceCoffe serviceCoffe) {
         this.repoOrder = repoOrder;
+        this.serviceCoffe = serviceCoffe;
+    }
+
+    private void validarCafesEnOrden(Orders order) {
+        if (order.getCafes() == null || order.getCafes().isEmpty()) {
+            throw new IllegalArgumentException("La orden debe contener al menos un café");
+        }
+
+        for (Map.Entry<CoffeeSimplyfied, Integer> entry : order.getCafes().entrySet()) {
+            CoffeeSimplyfied cafe = entry.getKey();
+            if (cafe == null) {
+                throw new IllegalArgumentException("No se puede agregar un café nulo a la orden");
+            }
+            
+            try {
+                Coffe coffeCompleto = serviceCoffe.getCoffeById(cafe.getId());
+                // Actualizar el precio del café simplificado con el precio real
+                cafe.setPrecio(coffeCompleto.getPrice());
+                // Guardar la referencia al café completo
+                cafe.setCoffeCompleto(coffeCompleto);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("El café con ID " + cafe.getId() + " no existe");
+            }
+
+            if (entry.getValue() <= 0) {
+                throw new IllegalArgumentException("La cantidad del café debe ser mayor a 0");
+            }
+        }
     }
 
     public List<Orders> getListaOrders() {
@@ -36,12 +68,12 @@ public class ServiceOrders {
     }
 
     public Orders addOrder(Orders order) {
-        if (order == null || 
-            order.getClientId() == null ||
-            order.getCafes() == null || order.getCafes().isEmpty() ||
-            order.getPrecioTotal() <= 0) {
-            throw new IllegalArgumentException("El pedido no puede ser nulo o tener campos vacíos");
+        if (order == null || order.getClientId() == null) {
+            throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
         }
+
+        validarCafesEnOrden(order);
+        
         if(repoOrder.findAll() == null || repoOrder.findAll().isEmpty()) {
             order.setId(1l);
             repoOrder.save(order);
@@ -53,13 +85,11 @@ public class ServiceOrders {
     }
     
     public Orders putOrder(Orders order) {
-        if (order == null || 
-            order.getClientId() == null ||
-            order.getCafes() == null || order.getCafes().isEmpty() ||
-            order.getPrecioTotal() <= 0) {
-            throw new IllegalArgumentException("El pedido no puede ser nulo o tener campos vacíos");
+        if (order == null || order.getClientId() == null) {
+            throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
         }
-        
+
+        validarCafesEnOrden(order);        
         return repoOrder.save(order);
     }
 
@@ -95,5 +125,12 @@ public class ServiceOrders {
             nOrder.setFechaOrden(order.getFechaOrden());
         }
         return repoOrder.update(nOrder);
+    }
+
+    public List<Orders> getOrdersByClientId(long id) {
+        if(repoOrder.findByClientId(id) == null || repoOrder.findByClientId(id).isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return repoOrder.findByClientId(id);
     }
 } 

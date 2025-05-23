@@ -32,7 +32,7 @@ public class ServiceClients {
 
     public Clients getClientById(long id) {
         return repoClient.findById(id).orElseThrow(() -> 
-            new IllegalArgumentException("No se puede obtener el cliente. ID inválido"));
+            new EmptyStackException());
     }
 
     public Clients addClient(Clients client) {
@@ -60,6 +60,10 @@ public class ServiceClients {
             throw new IllegalArgumentException("El cliente no puede ser nulo o tener campos vacíos");
         }
         
+        if(repoClient.findAll() == null || repoClient.findAll().isEmpty()) {
+            throw new EmptyStackException();
+        }
+
         return repoClient.save(client);
     }
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -43,5 +44,11 @@ public class RepoOrder {
     public Orders update(Orders orders) {
         this.orders.put(orders.getId(), orders);
         return orders;
+    }
+
+    public List<Orders> findByClientId(long id) {
+        return orders.values().stream()
+            .filter(order -> order.getClientId() == id)
+            .collect(Collectors.toList());
     }
 } 

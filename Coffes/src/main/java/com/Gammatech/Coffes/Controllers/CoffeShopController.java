@@ -77,6 +77,9 @@ public class CoffeShopController {
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
+		catch (EmptyStackException e) {
+			return ResponseEntity.status(404).body(null);
+		}
 	}
 
 	@DeleteMapping("/coffes/{id}")
@@ -88,7 +91,7 @@ public class CoffeShopController {
 			return ResponseEntity.status(400).body(null);
 		}
 		catch (EmptyStackException e) {
-			return ResponseEntity.status(204).body(null);
+			return ResponseEntity.status(404).body(null);
 		}
 	}
 
@@ -101,6 +104,8 @@ public class CoffeShopController {
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
-		
+		catch (EmptyStackException e) {
+			return ResponseEntity.status(404).body(null);
+		}
 	}
 }
