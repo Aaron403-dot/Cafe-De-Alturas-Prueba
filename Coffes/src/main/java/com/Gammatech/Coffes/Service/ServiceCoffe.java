@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.Gammatech.Coffes.Entities.Coffe;
 import com.Gammatech.Coffes.Repo.RepoCoffe;
 
+import jakarta.transaction.Transactional;
+
 /**
  *
  * @author Usuario
@@ -28,7 +30,7 @@ public class ServiceCoffe {
     }
 
     public List<Coffe> getListaCoffe() {
-        return repoCoffe.findAll();
+        return (List<Coffe>) repoCoffe.findAll();
     }
 
 
@@ -37,6 +39,7 @@ public class ServiceCoffe {
             new IllegalArgumentException("No se puede obtener el café. ID inválido"));
     }
 
+    @Transactional
     public Coffe addCoffe(Coffe coffe) {
         if (coffe == null || 
             coffe.getName() == null || coffe.getName().isEmpty() ||
@@ -44,16 +47,15 @@ public class ServiceCoffe {
             coffe.getDescription() == null || coffe.getDescription().isEmpty()) {
             throw new IllegalArgumentException("El café no puede ser nulo o tener campos vacíos");
         }
-        if(repoCoffe.findAll() == null || repoCoffe.findAll().isEmpty()) {
-            coffe.setId(1l);
+        if(repoCoffe.findAll() == null || ((List<Coffe>) repoCoffe.findAll()).isEmpty()) {
             repoCoffe.save(coffe);
         } else {
-            coffe.setId(repoCoffe.findAll().get(repoCoffe.findAll().size()-1).getId()+1l);
             repoCoffe.save(coffe);
         }
         return coffe;
     }
     
+    @Transactional
     public Coffe putCoffe(Coffe coffe) {
         if (coffe == null || 
             coffe.getName() == null || coffe.getName().isEmpty() ||
@@ -61,25 +63,27 @@ public class ServiceCoffe {
             coffe.getDescription() == null || coffe.getDescription().isEmpty()) {
             throw new IllegalArgumentException("El café no puede ser nulo o tener campos vacíos");
         }
-        if(repoCoffe.findAll() == null || repoCoffe.findAll().isEmpty()) {
+        if(repoCoffe.findAll() == null || ((List<Coffe>) repoCoffe.findAll()).isEmpty()) {
             throw new EmptyStackException();
         }
         
         return repoCoffe.save(coffe);
     }
 
+    @Transactional
     public long deleteCoffe(long id) {
         if (!repoCoffe.findById(id).isPresent()) {
             throw new IllegalArgumentException("No se puede eliminar el café. ID inválido");
         }
-        if(repoCoffe.findAll().isEmpty() || repoCoffe.findAll() == null) {
+        if(repoCoffe.findAll() == null || ((List<Coffe>) repoCoffe.findAll()).isEmpty()) {
             throw new EmptyStackException();
         }
 
-        repoCoffe.delete(id);
+        repoCoffe.deleteById(id);
         return id;
     }
 
+    @Transactional
     public Coffe patchCoffe(long id, Coffe coffe) {
         Coffe nCoffe = repoCoffe.findById(id).orElseThrow(() -> 
             new EmptyStackException());
@@ -99,6 +103,6 @@ public class ServiceCoffe {
         if (coffe.getImage() != null) {
             nCoffe.setImage(coffe.getImage());
         }
-        return repoCoffe.update(nCoffe);
+            return repoCoffe.save(nCoffe);
     }
 }

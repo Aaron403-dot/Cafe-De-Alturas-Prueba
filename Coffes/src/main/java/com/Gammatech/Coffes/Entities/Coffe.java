@@ -5,20 +5,38 @@
 
 package com.Gammatech.Coffes.Entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  *
  * @author Aaron del Cristo Suarez Suarez
  */
 
+@Entity
 public class Coffe {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String description;
-    private double price;
-    private int stock;
-    private String image;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private double price;
+
+    @Column(nullable = false)
+    private int stock;
+
+    @Column
+    private String image;
 
     public Coffe() {
     	

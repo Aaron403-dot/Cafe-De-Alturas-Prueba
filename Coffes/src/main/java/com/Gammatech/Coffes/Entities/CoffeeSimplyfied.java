@@ -8,14 +8,28 @@ package com.Gammatech.Coffes.Entities;
 import com.Gammatech.Coffes.Service.ServiceCoffe;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  *
  * @author Usuario
  */
+@Entity
 public class CoffeeSimplyfied {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column
     private double precio;
+
+    @Column
     private int cantidad;
+
     @JsonIgnore
     private transient Coffe coffeCompleto;
 

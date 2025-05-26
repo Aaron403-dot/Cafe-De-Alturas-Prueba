@@ -25,8 +25,6 @@ public class CoffeShopOrderController {
 	
 	/**
 	 * 
-	 * TODO conectarlos a los service
-	 * TODO Analizar que los service dan bien la señal
 	 * 
 	 * */
 	

@@ -1,15 +1,34 @@
 package com.Gammatech.Coffes.Entities;
 
-/**
-*
-* @author Aaron del Cristo Suarez Suarez
-*/
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+
+@Entity
 public class Clients {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Transient
+	private Long version;
+	
+	@Column(nullable = false)
 	private String nombre;
+
+	@Column
 	private String apellidos;
+	
+	@Column(nullable = false)
 	private String email;
+	
+	@Column(nullable = false)
 	private String telefono;
+	
+	@Column
 	private String direccion;
 	
 	// Constructor vacío
@@ -33,6 +52,14 @@ public class Clients {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	public String getNombre() {

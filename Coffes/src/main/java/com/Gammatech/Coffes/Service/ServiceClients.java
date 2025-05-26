@@ -5,10 +5,11 @@
 
 package com.Gammatech.Coffes.Service;
 
-import java.util.EmptyStackException;
 import java.util.List;
 
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.Gammatech.Coffes.Entities.Clients;
 import com.Gammatech.Coffes.Repo.RepoClient;
@@ -27,14 +28,15 @@ public class ServiceClients {
     }
 
     public List<Clients> getListaClients() {
-        return repoClient.findAll();
+        return (List<Clients>) repoClient.findAll();
     }
 
     public Clients getClientById(long id) {
         return repoClient.findById(id).orElseThrow(() -> 
-            new EmptyStackException());
+            new IllegalArgumentException("Cliente no encontrado"));
     }
 
+    @Transactional
     public Clients addClient(Clients client) {
         if (client == null || 
             client.getNombre() == null || client.getNombre().isEmpty() ||
@@ -42,16 +44,14 @@ public class ServiceClients {
             client.getTelefono() == null || client.getTelefono().isEmpty()) {
             throw new IllegalArgumentException("El cliente no puede ser nulo o tener campos vacíos");
         }
-        if(repoClient.findAll() == null || repoClient.findAll().isEmpty()) {
-            client.setId(1l);
-            repoClient.save(client);
-        } else {
-            client.setId(repoClient.findAll().get(repoClient.findAll().size()-1).getId()+1l);
-            repoClient.save(client);
+        try {
+            return repoClient.save(client);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new IllegalArgumentException("Error de concurrencia al guardar el cliente");
         }
-        return client;
     }
     
+    @Transactional
     public Clients putClient(Clients client) {
         if (client == null || 
             client.getNombre() == null || client.getNombre().isEmpty() ||
@@ -60,44 +60,50 @@ public class ServiceClients {
             throw new IllegalArgumentException("El cliente no puede ser nulo o tener campos vacíos");
         }
         
-        if(repoClient.findAll() == null || repoClient.findAll().isEmpty()) {
-            throw new EmptyStackException();
+        if (!repoClient.existsById(client.getId())) {
+            throw new IllegalArgumentException("Cliente no encontrado");
         }
 
-        return repoClient.save(client);
+        try {
+            return repoClient.save(client);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new IllegalArgumentException("Error de concurrencia al actualizar el cliente");
+        }
     }
 
-    public long deleteClient(long id) {
-        if (!repoClient.findById(id).isPresent()) {
-            throw new IllegalArgumentException("No se puede eliminar el cliente. ID inválido");
+    @Transactional
+    public void deleteClient(long id) {
+        if (!repoClient.existsById(id)) {
+            throw new IllegalArgumentException("Cliente no encontrado");
         }
-        if(repoClient.findAll().isEmpty() || repoClient.findAll() == null) {
-            throw new EmptyStackException();
-        }
-
-        repoClient.delete(id);
-        return id;
+        repoClient.deleteById(id);
     }
 
+    @Transactional
     public Clients patchClient(long id, Clients client) {
-        Clients nClient = repoClient.findById(id).orElseThrow(() -> 
-            new IllegalArgumentException("No se puede modificar el cliente. ID inválido"));
+        Clients existingClient = repoClient.findById(id).orElseThrow(() -> 
+            new IllegalArgumentException("Cliente no encontrado"));
         
-        if (client.getNombre() != null && !client.getNombre().isEmpty() && !client.getNombre().isBlank() && !nClient.getNombre().equals(client.getNombre())) {
-            nClient.setNombre(client.getNombre());
+        if (client.getNombre() != null && !client.getNombre().isEmpty()) {
+            existingClient.setNombre(client.getNombre());
         }
-        if (client.getApellidos() != null && !client.getApellidos().isEmpty() && !client.getApellidos().isBlank() && !nClient.getApellidos().equals(client.getApellidos())) {
-            nClient.setApellidos(client.getApellidos());
+        if (client.getApellidos() != null && !client.getApellidos().isEmpty()) {
+            existingClient.setApellidos(client.getApellidos());
         }
-        if (client.getEmail() != null && !client.getEmail().isEmpty() && !client.getEmail().isBlank() && !nClient.getEmail().equals(client.getEmail())) {
-            nClient.setEmail(client.getEmail());
+        if (client.getEmail() != null && !client.getEmail().isEmpty()) {
+            existingClient.setEmail(client.getEmail());
         }
-        if (client.getTelefono() != null && !client.getTelefono().isEmpty() && !client.getTelefono().isBlank() && !nClient.getTelefono().equals(client.getTelefono())) {
-            nClient.setTelefono(client.getTelefono());
+        if (client.getTelefono() != null && !client.getTelefono().isEmpty()) {
+            existingClient.setTelefono(client.getTelefono());
         }
-        if (client.getDireccion() != null && !client.getDireccion().isEmpty() && !client.getDireccion().isBlank() && !nClient.getDireccion().equals(client.getDireccion())) {
-            nClient.setDireccion(client.getDireccion());
+        if (client.getDireccion() != null && !client.getDireccion().isEmpty()) {
+            existingClient.setDireccion(client.getDireccion());
         }
-        return repoClient.update(nClient);
+        
+        try {
+            return repoClient.save(existingClient);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new IllegalArgumentException("Error de concurrencia al actualizar el cliente");
+        }
     }
 } 

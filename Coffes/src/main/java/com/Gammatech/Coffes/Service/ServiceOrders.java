@@ -7,7 +7,7 @@ package com.Gammatech.Coffes.Service;
 
 import java.util.EmptyStackException;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,8 @@ import com.Gammatech.Coffes.Entities.Coffe;
 import com.Gammatech.Coffes.Entities.CoffeeSimplyfied;
 import com.Gammatech.Coffes.Entities.Orders;
 import com.Gammatech.Coffes.Repo.RepoOrder;
+
+import jakarta.transaction.Transactional;
 
 /**
  *
@@ -36,8 +38,7 @@ public class ServiceOrders {
             throw new IllegalArgumentException("La orden debe contener al menos un café");
         }
 
-        for (Map.Entry<CoffeeSimplyfied, Integer> entry : order.getCafes().entrySet()) {
-            CoffeeSimplyfied cafe = entry.getKey();
+        for (CoffeeSimplyfied cafe : order.getCafes()) {
             if (cafe == null) {
                 throw new IllegalArgumentException("No se puede agregar un café nulo a la orden");
             }
@@ -52,14 +53,14 @@ public class ServiceOrders {
                 throw new IllegalArgumentException("El café con ID " + cafe.getId() + " no existe");
             }
 
-            if (entry.getValue() <= 0) {
+            if (cafe.getCantidad() <= 0) {
                 throw new IllegalArgumentException("La cantidad del café debe ser mayor a 0");
             }
         }
     }
 
     public List<Orders> getListaOrders() {
-        return repoOrder.findAll();
+        return (List<Orders>) repoOrder.findAll();
     }
 
     public Orders getOrderById(long id) {
@@ -67,6 +68,7 @@ public class ServiceOrders {
             new IllegalArgumentException("No se puede obtener el pedido. ID inválido"));
     }
 
+    @Transactional
     public Orders addOrder(Orders order) {
         if (order == null || order.getClientId() == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
@@ -74,16 +76,15 @@ public class ServiceOrders {
 
         validarCafesEnOrden(order);
         
-        if(repoOrder.findAll() == null || repoOrder.findAll().isEmpty()) {
-            order.setId(1l);
+        if(repoOrder.findAll() == null || ((List<Orders>) repoOrder.findAll()).isEmpty()) {
             repoOrder.save(order);
         } else {
-            order.setId(repoOrder.findAll().get(repoOrder.findAll().size()-1).getId()+1l);
             repoOrder.save(order);
         }
         return order;
     }
     
+    @Transactional
     public Orders putOrder(Orders order) {
         if (order == null || order.getClientId() == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
@@ -93,18 +94,20 @@ public class ServiceOrders {
         return repoOrder.save(order);
     }
 
+    @Transactional
     public long deleteOrder(long id) {
         if (!repoOrder.findById(id).isPresent()) {
             throw new IllegalArgumentException("No se puede eliminar el pedido. ID inválido");
         }
-        if(repoOrder.findAll().isEmpty() || repoOrder.findAll() == null) {
+        if(repoOrder.findAll() == null || ((List<Orders>) repoOrder.findAll()).isEmpty()) {
             throw new EmptyStackException();
         }
 
-        repoOrder.delete(id);
+        repoOrder.deleteById(id);
         return id;
     }
 
+    @Transactional
     public Orders patchOrder(long id, Orders order) {
         Orders nOrder = repoOrder.findById(id).orElseThrow(() -> 
             new IllegalArgumentException("No se puede modificar el pedido. ID inválido"));
@@ -124,13 +127,12 @@ public class ServiceOrders {
         if (order.getFechaOrden() != null && !nOrder.getFechaOrden().equals(order.getFechaOrden())) {
             nOrder.setFechaOrden(order.getFechaOrden());
         }
-        return repoOrder.update(nOrder);
+        return repoOrder.save(nOrder);
     }
-
     public List<Orders> getOrdersByClientId(long id) {
-        if(repoOrder.findByClientId(id) == null || repoOrder.findByClientId(id).isEmpty()) {
-            throw new EmptyStackException();
-        }
-        return repoOrder.findByClientId(id);
+        return ((List<Orders>) repoOrder.findAll())
+            .stream()
+            .filter(order -> order.getClientId() == id)
+            .collect(Collectors.toList());
     }
-} 
+}

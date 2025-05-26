@@ -1,24 +1,44 @@
 package com.Gammatech.Coffes.Entities;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 /**
  *
  * @author Aaron del Cristo Suarez Suarez
  */
+
+@Entity
 public class Orders {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private Long clientId;
-    private Map<CoffeeSimplyfied, Integer> cafes; // Map donde la key es el café y el value es la cantidad
+
+    @OneToMany
+    private List<CoffeeSimplyfied> cafes; //Array esta los café
+
+    @Column(nullable = false)
     private double precioTotal;
+
+    @Column(nullable = false)
     private LocalDateTime fechaOrden;
+
+    @Column(nullable = false)
     private String estado; // PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA
     
     // Constructor vacío
     public Orders() {
-        this.cafes = new HashMap<>();
+        this.cafes = new ArrayList<>();
         this.fechaOrden = LocalDateTime.now();
     }
     
@@ -26,7 +46,7 @@ public class Orders {
     public Orders(Long id, Long clientId, String estado) {
         this.id = id;
         this.clientId = clientId;
-        this.cafes = new HashMap<>();
+        this.cafes = new ArrayList<>();
         this.estado = estado;
         this.fechaOrden = LocalDateTime.now();
     }
@@ -34,16 +54,16 @@ public class Orders {
     // Método para agregar un café a la orden
     public void agregarCafe(CoffeeSimplyfied cafe, int cantidad) {
         if (this.cafes == null) {
-            this.cafes = new HashMap<>();
+            this.cafes = new ArrayList<>();
         }
-        this.cafes.put(cafe, cantidad);
+        this.cafes.add(cafe);
         this.calcularPrecioTotal();
     }
     
     // Método para calcular el precio total
     public void calcularPrecioTotal() {
-        this.precioTotal = this.cafes.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey().getPrecio() * entry.getValue())
+        this.precioTotal = this.cafes.stream()
+                .mapToDouble(entry -> entry.getPrecio() * entry.getCantidad())
                 .sum();
     }
     
@@ -64,11 +84,11 @@ public class Orders {
         this.clientId = clientId;
     }
 
-    public Map<CoffeeSimplyfied, Integer> getCafes() {
+    public List<CoffeeSimplyfied> getCafes() {
         return cafes;
     }
 
-    public void setCafes(Map<CoffeeSimplyfied, Integer> cafes) {
+    public void setCafes(List<CoffeeSimplyfied> cafes) {
         this.cafes = cafes;
         this.calcularPrecioTotal();
     }
