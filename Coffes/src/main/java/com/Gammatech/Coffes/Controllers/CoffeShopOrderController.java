@@ -1,9 +1,10 @@
 package com.Gammatech.Coffes.Controllers;
 
-import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Gammatech.Coffes.Entities.Orders;
+import com.Gammatech.Coffes.Res.PageResponseOrders;
 import com.Gammatech.Coffes.Service.ServiceOrders;
 
 
@@ -27,9 +30,7 @@ public class CoffeShopOrderController {
 	 * 
 	 * 
 	 * */
-	
-	private final List<Orders> orders = new ArrayList<>();
-	
+		
 	private final ServiceOrders serviceOrders;
 	
 	public CoffeShopOrderController(ServiceOrders serviceOrder){
@@ -37,12 +38,20 @@ public class CoffeShopOrderController {
 	}
 	
 	@GetMapping("/orders")
-	public List<Orders> getOrders() {
-		return serviceOrders.getListaOrders();
+	public ResponseEntity<PageResponseOrders> getOrders(@RequestParam(defaultValue = "0") int page,
+            					@RequestParam(defaultValue = "2") int size) {
+		Page<Orders> ordersPage = serviceOrders.getListaOrders(page, size);
+        PageResponseOrders pageResponseOrders = new PageResponseOrders(
+                ordersPage.getContent(),
+                (int) ordersPage.getTotalElements(),
+                ordersPage.getTotalPages(),
+                ordersPage.getNumber()
+        );	
+		return ResponseEntity.status(HttpStatus.OK).body(pageResponseOrders);
 	}
 	
 	@GetMapping("/orders/{id}")
-	public ResponseEntity<Orders> getOrderById(@PathVariable long id) {
+	public ResponseEntity<Optional<Orders>> getOrderById(@PathVariable long id) {
 		try {
 			return ResponseEntity.status(200).body(serviceOrders.getOrderById(id));
 		} catch (IllegalArgumentException e) {
@@ -63,8 +72,8 @@ public class CoffeShopOrderController {
 	@PostMapping(value = "/orders", consumes = "application/json")
 	public ResponseEntity<Orders> addOrder(@RequestBody Orders order) {
 		try {
-			orders.add(serviceOrders.addOrder(order));
-			return ResponseEntity.status(201).body(serviceOrders.addOrder(order));
+			Orders orders = serviceOrders.addOrder(order);
+			return ResponseEntity.status(201).body(orders);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
@@ -73,8 +82,6 @@ public class CoffeShopOrderController {
 	@PutMapping("/orders/{id}")
 	public ResponseEntity<Orders> putOrder(@PathVariable long id, @RequestBody Orders order) {
 		try {
-			order.setId(id);
-			orders.set((int)id -1, serviceOrders.putOrder(order));
 			return ResponseEntity.status(200).body(serviceOrders.putOrder(order));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(404).body(null);
@@ -84,24 +91,20 @@ public class CoffeShopOrderController {
 	@DeleteMapping("/orders/{id}")
 	public ResponseEntity<Orders> deleteOrder(@PathVariable long id) {
 		try {
-			orders.remove( (int) serviceOrders.deleteOrder(id) -1);
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-
+			Optional<Orders> orders = serviceOrders.deleteOrder(id);
+			return ResponseEntity.status(HttpStatus.OK).body(orders.orElse(null));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
 		catch (EmptyStackException e) {
-			return ResponseEntity.status(204).body(null);
+			return ResponseEntity.status(404).body(null);
 		}
-		
-
 	}
 	
 	@PatchMapping("/orders/{id}")
 	public ResponseEntity<Orders> patchOrder(@PathVariable long id, @RequestBody Orders order) {
 		try {
 			Orders nOrder = serviceOrders.patchOrder(id, order);
-			orders.set((int)id -1, nOrder);
 			return ResponseEntity.status(200).body(nOrder);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);

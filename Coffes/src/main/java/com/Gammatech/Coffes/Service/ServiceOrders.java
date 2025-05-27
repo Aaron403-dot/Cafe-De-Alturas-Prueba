@@ -7,8 +7,11 @@ package com.Gammatech.Coffes.Service;
 
 import java.util.EmptyStackException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.Gammatech.Coffes.Entities.Coffe;
@@ -44,17 +47,21 @@ public class ServiceOrders {
             }
             
             try {
-                Coffe coffeCompleto = serviceCoffe.getCoffeById(cafe.getId());
+                Optional<Coffe> coffeCompleto = serviceCoffe.getCoffeById(cafe.getId());
                 // Actualizar el precio del café simplificado con el precio real
-                cafe.setPrecio(coffeCompleto.getPrice());
+                cafe.setPrecio(coffeCompleto.get().getPrice());
                 // Guardar la referencia al café completo
-                cafe.setCoffeCompleto(coffeCompleto);
+                cafe.setCoffeCompleto(coffeCompleto.get());
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("El café con ID " + cafe.getId() + " no existe");
             }
 
             if (cafe.getCantidad() <= 0) {
                 throw new IllegalArgumentException("La cantidad del café debe ser mayor a 0");
+            }
+
+            if(order.getClientId() == null || order.getClientId() <= 0) {
+                throw new IllegalArgumentException("El ID del cliente debe ser válido y mayor a 0");
             }
         }
     }
@@ -63,9 +70,19 @@ public class ServiceOrders {
         return (List<Orders>) repoOrder.findAll();
     }
 
-    public Orders getOrderById(long id) {
-        return repoOrder.findById(id).orElseThrow(() -> 
-            new IllegalArgumentException("No se puede obtener el pedido. ID inválido"));
+    @Transactional
+    public Page<Orders> getListaOrders(int pagina , int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return repoOrder.findAll(pageable);
+    }
+
+
+    public Optional<Orders> getOrderById(long id) {
+        Optional <Orders> order = repoOrder.findById(id);
+        if (order.isEmpty()) {
+            throw new IllegalArgumentException("Pedido no encontrado con ID: " + id);
+        }
+        return order;
     }
 
     @Transactional
@@ -95,16 +112,16 @@ public class ServiceOrders {
     }
 
     @Transactional
-    public long deleteOrder(long id) {
-        if (!repoOrder.findById(id).isPresent()) {
-            throw new IllegalArgumentException("No se puede eliminar el pedido. ID inválido");
-        }
+    public Optional<Orders> deleteOrder(long id) {
+        Optional<Orders> orderDel = this.getOrderById(id);
         if(repoOrder.findAll() == null || ((List<Orders>) repoOrder.findAll()).isEmpty()) {
             throw new EmptyStackException();
         }
-
+        if (orderDel.isEmpty()) {
+            throw new IllegalArgumentException("No se puede eliminar el pedido. ID inválido");
+        }
         repoOrder.deleteById(id);
-        return id;
+        return orderDel;
     }
 
     @Transactional
@@ -129,10 +146,8 @@ public class ServiceOrders {
         }
         return repoOrder.save(nOrder);
     }
+
     public List<Orders> getOrdersByClientId(long id) {
-        return ((List<Orders>) repoOrder.findAll())
-            .stream()
-            .filter(order -> order.getClientId() == id)
-            .collect(Collectors.toList());
+        return repoOrder.findByClientId(id);
     }
 }

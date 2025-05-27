@@ -7,7 +7,11 @@ package com.Gammatech.Coffes.Service;
 
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.Gammatech.Coffes.Entities.Coffe;
@@ -33,10 +37,19 @@ public class ServiceCoffe {
         return (List<Coffe>) repoCoffe.findAll();
     }
 
+    @Transactional
+    public Page<Coffe> getListaCoffe(int pagina , int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return repoCoffe.findAll(pageable);
+    }
 
-    public Coffe getCoffeById(long id) {
-        return repoCoffe.findById(id).orElseThrow(() -> 
-            new IllegalArgumentException("No se puede obtener el café. ID inválido"));
+
+    public Optional<Coffe> getCoffeById(long id) {
+        Optional<Coffe> optionalCoffe = repoCoffe.findById(id);
+        if (optionalCoffe.isEmpty()) {
+            throw new IllegalArgumentException("No se puede obtener el café. ID inválido");
+        }
+        return optionalCoffe;
     }
 
     @Transactional
@@ -71,16 +84,17 @@ public class ServiceCoffe {
     }
 
     @Transactional
-    public long deleteCoffe(long id) {
-        if (!repoCoffe.findById(id).isPresent()) {
-            throw new IllegalArgumentException("No se puede eliminar el café. ID inválido");
-        }
+    public Optional<Coffe> deleteCoffe(long id) {
+        Optional<Coffe> optionalCoffe = repoCoffe.findById(id);
         if(repoCoffe.findAll() == null || ((List<Coffe>) repoCoffe.findAll()).isEmpty()) {
             throw new EmptyStackException();
         }
+        if (optionalCoffe.isEmpty()) {
+            throw new IllegalArgumentException("No se puede eliminar el café. ID inválido");
+        }
 
         repoCoffe.deleteById(id);
-        return id;
+        return optionalCoffe;
     }
 
     @Transactional

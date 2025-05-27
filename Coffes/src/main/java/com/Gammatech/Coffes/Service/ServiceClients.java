@@ -5,8 +5,13 @@
 
 package com.Gammatech.Coffes.Service;
 
+import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +34,12 @@ public class ServiceClients {
 
     public List<Clients> getListaClients() {
         return (List<Clients>) repoClient.findAll();
+    }
+
+    @Transactional
+    public Page<Clients> getListaClients(int pagina , int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return repoClient.findAll(pageable);
     }
 
     public Clients getClientById(long id) {
@@ -72,11 +83,17 @@ public class ServiceClients {
     }
 
     @Transactional
-    public void deleteClient(long id) {
-        if (!repoClient.existsById(id)) {
-            throw new IllegalArgumentException("Cliente no encontrado");
+    public Optional<Clients> deleteClient(long id) {
+        Optional<Clients> optionalClients = repoClient.findById(id);
+        if(repoClient.findAll() == null || ((List<Clients>) repoClient.findAll()).isEmpty()) {
+            throw new EmptyStackException();
         }
+        if (optionalClients.isEmpty()) {
+            throw new IllegalArgumentException("No se puede eliminar el client. ID inválido");
+        }
+
         repoClient.deleteById(id);
+        return optionalClients;
     }
 
     @Transactional
@@ -106,4 +123,4 @@ public class ServiceClients {
             throw new IllegalArgumentException("Error de concurrencia al actualizar el cliente");
         }
     }
-} 
+}

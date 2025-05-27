@@ -5,6 +5,8 @@
 
 package com.Gammatech.Coffes.Entities;
 
+import java.util.Optional;
+
 import com.Gammatech.Coffes.Service.ServiceCoffe;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,6 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 
 /**
  *
@@ -32,6 +36,10 @@ public class CoffeeSimplyfied {
 
     @JsonIgnore
     private transient Coffe coffeCompleto;
+
+    @Transient
+    @ManyToOne
+    private Orders orders;
 
     public CoffeeSimplyfied() {
     }
@@ -77,8 +85,8 @@ public class CoffeeSimplyfied {
 
     public boolean validarCoffe(ServiceCoffe serviceCoffe) {
         try {
-            Coffe coffe = serviceCoffe.getCoffeById(this.id);
-            return coffe != null && coffe.getId() == this.id;
+            Optional<Coffe> coffe = serviceCoffe.getCoffeById(this.id);
+            return coffe != null && coffe.get().getId() == this.id;
         } catch (IllegalArgumentException e) {
             return false;
         }
@@ -88,5 +96,13 @@ public class CoffeeSimplyfied {
         if (!validarCoffe(serviceCoffe)) {
             throw new IllegalArgumentException("El café con ID " + this.id + " no existe o no es válido");
         }
+    }
+
+    public Orders getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Orders orders) {
+        this.orders = orders;
     }
 }

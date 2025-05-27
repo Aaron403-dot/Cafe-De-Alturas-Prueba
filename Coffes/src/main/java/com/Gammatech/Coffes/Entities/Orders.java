@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 /**
  *
@@ -22,9 +23,11 @@ public class Orders {
     private Long id;
 
     @Column(nullable = false)
+    @JoinColumn(name = "client_id", nullable = false)
     private Long clientId;
 
     @OneToMany
+    @JoinColumn(name = "cafe_id", nullable = false)
     private List<CoffeeSimplyfied> cafes; //Array esta los café
 
     @Column(nullable = false)
@@ -49,6 +52,7 @@ public class Orders {
         this.cafes = new ArrayList<>();
         this.estado = estado;
         this.fechaOrden = LocalDateTime.now();
+        calcularPrecioTotal();
     }
     
     // Método para agregar un café a la orden
@@ -57,14 +61,15 @@ public class Orders {
             this.cafes = new ArrayList<>();
         }
         this.cafes.add(cafe);
-        this.calcularPrecioTotal();
+        calcularPrecioTotal();
     }
     
     // Método para calcular el precio total
-    public void calcularPrecioTotal() {
+    public double calcularPrecioTotal() {
         this.precioTotal = this.cafes.stream()
                 .mapToDouble(entry -> entry.getPrecio() * entry.getCantidad())
                 .sum();
+        return this.precioTotal;
     }
     
     // Getters y Setters

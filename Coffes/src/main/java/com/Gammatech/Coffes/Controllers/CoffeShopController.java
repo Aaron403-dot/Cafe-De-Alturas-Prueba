@@ -5,10 +5,10 @@
 
 package com.Gammatech.Coffes.Controllers;
 
-import java.util.ArrayList;
 import java.util.EmptyStackException;
-import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Gammatech.Coffes.Entities.Coffe;
+import com.Gammatech.Coffes.Res.PageResponseCoffe;
 import com.Gammatech.Coffes.Service.ServiceCoffe;
 
 
@@ -31,10 +33,7 @@ import com.Gammatech.Coffes.Service.ServiceCoffe;
  */
 
 @RestController
-public class CoffeShopController {
-	
-	private static List<Coffe> coffes = new ArrayList<>();
-	
+public class CoffeShopController {	
 
 	private ServiceCoffe serviceCoffe;
 
@@ -44,24 +43,32 @@ public class CoffeShopController {
 	}
 
 	@GetMapping("/coffes")
-	public ResponseEntity<List<Coffe>> getListaCoffe() {	
-		return ResponseEntity.status(200).body(serviceCoffe.getListaCoffe());
+	public ResponseEntity<PageResponseCoffe> getListaCoffe(@RequestParam(defaultValue = "0") int page,
+            					@RequestParam(defaultValue = "2") int size) {	
+		Page<Coffe> coffePage = serviceCoffe.getListaCoffe(page, size);
+        PageResponseCoffe pageResponseCoffe = new PageResponseCoffe(
+                coffePage.getContent(),
+                (int) coffePage.getTotalElements(),
+                coffePage.getTotalPages(),
+                coffePage.getNumber()
+        );	
+		return ResponseEntity.status(HttpStatus.OK).body(pageResponseCoffe);
 	}
 
 	@GetMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> getCoffeById(@PathVariable long id) {
 		try {
-			return ResponseEntity.status(200).body(serviceCoffe.getCoffeById(id));
+			return ResponseEntity.status(200).body(serviceCoffe.getCoffeById(id).orElse(null));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
 	}
 	
 	@PostMapping("/coffes")
-	public ResponseEntity<Coffe> postMethodName(@RequestBody Coffe entity) {
+	public ResponseEntity<Coffe> postCoffe(@RequestBody Coffe entity) {
 		try {
-			coffes.add(serviceCoffe.addCoffe(entity));
-			return ResponseEntity.status(201).body(entity);
+			Coffe coffes=serviceCoffe.addCoffe(entity);
+			return ResponseEntity.status(201).body(coffes);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
@@ -69,11 +76,9 @@ public class CoffeShopController {
 	}
 	
 	@PutMapping("/coffes/{id}")
-	public ResponseEntity<Coffe> putMethodName(@PathVariable int id, @RequestBody Coffe entity) {
+	public ResponseEntity<Coffe> putCoffe(@PathVariable int id, @RequestBody Coffe entity) {
 		try {
-			entity.setId((long)id);
-			coffes.set(id -1, serviceCoffe.putCoffe(entity));
-			return ResponseEntity.status(200).body(entity);
+			return ResponseEntity.status(200).body(serviceCoffe.putCoffe(entity));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
@@ -83,10 +88,10 @@ public class CoffeShopController {
 	}
 
 	@DeleteMapping("/coffes/{id}")
-	public ResponseEntity<Coffe> deleteMethodName(@PathVariable long id) {
+	public ResponseEntity<Coffe> deleteCoffe(@PathVariable long id) {
 		try {
-			coffes.remove((int)serviceCoffe.deleteCoffe(id) -1);
-			return ResponseEntity.status(HttpStatus.OK).build();
+			Optional<Coffe> coffe = serviceCoffe.deleteCoffe(id);
+			return ResponseEntity.status(HttpStatus.OK).body(coffe.orElse(null));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
@@ -96,10 +101,9 @@ public class CoffeShopController {
 	}
 
 	@PatchMapping("/coffes/{id}")
-	public ResponseEntity<Coffe> patchMethodName(@PathVariable int id, @RequestBody Coffe entity) {
+	public ResponseEntity<Coffe> patchCoffe(@PathVariable int id, @RequestBody Coffe entity) {
 		try {
 			Coffe nCoffe = serviceCoffe.patchCoffe(id, entity);
-			coffes.set(id -1, nCoffe);
 			return ResponseEntity.status(200).body(nCoffe);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);

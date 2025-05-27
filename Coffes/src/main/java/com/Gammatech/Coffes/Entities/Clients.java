@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -14,7 +15,8 @@ public class Clients {
 	private Long id;
 	
 	@Transient
-	private Long version;
+	@OneToOne
+	private Orders order;
 	
 	@Column(nullable = false)
 	private String nombre;
@@ -54,12 +56,12 @@ public class Clients {
 		this.id = id;
 	}
 
-	public Long getVersion() {
-		return version;
+	public Orders getOrders() {
+		return order;
 	}
 
-	public void setVersion(Long version) {
-		this.version = version;
+	public void setOrders(Orders orders) {
+		this.order = orders;
 	}
 
 	public String getNombre() {
