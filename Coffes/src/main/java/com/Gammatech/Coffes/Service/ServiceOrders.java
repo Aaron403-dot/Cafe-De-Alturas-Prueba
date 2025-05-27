@@ -101,6 +101,10 @@ public class ServiceOrders {
         return order;
     }
     
+    /**
+     * TODO: ver por que este metdodo no genera bien las ordenes
+    */
+
     @Transactional
     public Orders putOrder(Orders order) {
         if (order == null || order.getClientId() == null) {
