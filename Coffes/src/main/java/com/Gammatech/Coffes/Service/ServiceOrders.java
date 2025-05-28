@@ -19,8 +19,6 @@ import com.Gammatech.Coffes.Entities.CoffeeSimplyfied;
 import com.Gammatech.Coffes.Entities.Orders;
 import com.Gammatech.Coffes.Repo.RepoOrder;
 
-import jakarta.transaction.Transactional;
-
 /**
  *
  * @author Usuario
@@ -70,7 +68,6 @@ public class ServiceOrders {
         return (List<Orders>) repoOrder.findAll();
     }
 
-    @Transactional
     public Page<Orders> getListaOrders(int pagina , int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina);
         return repoOrder.findAll(pageable);
@@ -85,27 +82,16 @@ public class ServiceOrders {
         return order;
     }
 
-    @Transactional
     public Orders addOrder(Orders order) {
         if (order == null || order.getClientId() == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
         }
-
         validarCafesEnOrden(order);
-        
-        if(repoOrder.findAll() == null || ((List<Orders>) repoOrder.findAll()).isEmpty()) {
-            repoOrder.save(order);
-        } else {
-            repoOrder.save(order);
-        }
+        repoOrder.save(order);
         return order;
     }
     
-    /**
-     * TODO: ver por que este metdodo no genera bien las ordenes
-    */
 
-    @Transactional
     public Orders putOrder(Orders order) {
         if (order == null || order.getClientId() == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
@@ -115,7 +101,6 @@ public class ServiceOrders {
         return repoOrder.save(order);
     }
 
-    @Transactional
     public Optional<Orders> deleteOrder(long id) {
         Optional<Orders> orderDel = this.getOrderById(id);
         if(repoOrder.findAll() == null || ((List<Orders>) repoOrder.findAll()).isEmpty()) {
@@ -128,7 +113,6 @@ public class ServiceOrders {
         return orderDel;
     }
 
-    @Transactional
     public Orders patchOrder(long id, Orders order) {
         Orders nOrder = repoOrder.findById(id).orElseThrow(() -> 
             new IllegalArgumentException("No se puede modificar el pedido. ID inválido"));

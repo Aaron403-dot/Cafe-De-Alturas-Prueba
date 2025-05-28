@@ -75,6 +75,7 @@ public class CoffeShopOrderController {
 			Orders orders = serviceOrders.addOrder(order);
 			return ResponseEntity.status(201).body(orders);
 		} catch (IllegalArgumentException e) {
+			System.err.println("Error al agregar la orden: " + e.getMessage());
 			return ResponseEntity.status(400).body(null);
 		}
 	}

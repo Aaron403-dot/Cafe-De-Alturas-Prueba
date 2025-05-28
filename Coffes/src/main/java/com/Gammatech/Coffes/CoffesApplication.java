@@ -11,4 +11,6 @@ public class CoffesApplication {
 		SpringApplication.run(CoffesApplication.class, args);
 	}
 
+
+	//TODO: Limpiar el código, eliminar comentarios innecesarios y mejorar la legibilidad Cambiar idioma a ingles para que sea mas facil de entender para todos los desarrolladores
 }

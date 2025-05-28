@@ -52,7 +52,6 @@ public class Orders {
         this.cafes = new ArrayList<>();
         this.estado = estado;
         this.fechaOrden = LocalDateTime.now();
-        calcularPrecioTotal();
     }
     
     // Método para agregar un café a la orden
