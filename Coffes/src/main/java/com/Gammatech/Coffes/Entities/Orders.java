@@ -12,8 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 /**
- *
- * @author Aaron del Cristo Suarez Suarez
+ * Entidad que representa un pedido realizado en la cafetería.
+ * @author Aaron
  */
 
 @Entity
@@ -31,18 +31,18 @@ public class Orders {
     private List<CoffeeSimplyfied> cafes; //Array esta los café
 
     @Column(nullable = false)
-    private double precioTotal;
+    private double totalValue;
 
     @Column(nullable = false)
-    private LocalDateTime fechaOrden;
+    private LocalDateTime orderDate;
 
     @Column(nullable = false)
-    private String estado; // PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA
+    private String state; // PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA
     
     // Constructor vacío
     public Orders() {
         this.cafes = new ArrayList<>();
-        this.fechaOrden = LocalDateTime.now();
+        this.orderDate = LocalDateTime.now();
     }
     
     // Constructor con parámetros básicos
@@ -50,10 +50,15 @@ public class Orders {
         this.id = id;
         this.clientId = clientId;
         this.cafes = new ArrayList<>();
-        this.estado = estado;
-        this.fechaOrden = LocalDateTime.now();
+        this.state = estado;
+        this.orderDate = LocalDateTime.now();
     }
     
+    /**
+     * Agrega un café a la orden y recalcula el precio total.
+     * @param cafe Café a agregar
+     * @param cantidad Cantidad del café
+     */
     // Método para agregar un café a la orden
     public void agregarCafe(CoffeeSimplyfied cafe, int cantidad) {
         if (this.cafes == null) {
@@ -63,73 +68,129 @@ public class Orders {
         calcularPrecioTotal();
     }
     
+    /**
+     * Calcula el precio total de la orden.
+     * @return Precio total
+     */
     // Método para calcular el precio total
     public double calcularPrecioTotal() {
-        this.precioTotal = this.cafes.stream()
-                .mapToDouble(entry -> entry.getPrecio() * entry.getCantidad())
+        this.totalValue = this.cafes.stream()
+                .mapToDouble(entry -> entry.getPrice() * entry.getQuantity())
                 .sum();
-        return this.precioTotal;
+        return this.totalValue;
     }
     
+    /**
+     * Obtiene el identificador de la orden.
+     * @return ID
+     */
     // Getters y Setters
     public Long getId() {
         return id;
     }
 
+    /**
+     * Establece el identificador de la orden.
+     * @param id ID
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Obtiene el identificador del cliente asociado a la orden.
+     * @return ID del cliente
+     */
     public Long getClientId() {
         return clientId;
     }
 
+    /**
+     * Establece el identificador del cliente asociado a la orden.
+     * @param clientId ID del cliente
+     */
     public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 
+    /**
+     * Obtiene la lista de cafés de la orden.
+     * @return Lista de cafés
+     */
     public List<CoffeeSimplyfied> getCafes() {
         return cafes;
     }
 
+    /**
+     * Establece la lista de cafés de la orden y recalcula el precio total.
+     * @param cafes Lista de cafés
+     */
     public void setCafes(List<CoffeeSimplyfied> cafes) {
         this.cafes = cafes;
         this.calcularPrecioTotal();
     }
 
-    public double getPrecioTotal() {
-        return precioTotal;
+    /**
+     * Obtiene el valor total de la orden.
+     * @return Valor total
+     */
+    public double getTotalValue() {
+        return totalValue;
     }
 
-    public void setPrecioTotal(double precioTotal) {
-        this.precioTotal = precioTotal;
+    /**
+     * Establece el valor total de la orden.
+     * @param precioTotal Valor total
+     */
+    public void setTotalValue(double precioTotal) {
+        this.totalValue = precioTotal;
     }
 
-    public LocalDateTime getFechaOrden() {
-        return fechaOrden;
+    /**
+     * Obtiene la fecha de la orden.
+     * @return Fecha de la orden
+     */
+    public LocalDateTime getOrderDate() {
+        return orderDate;
     }
 
-    public void setFechaOrden(LocalDateTime fechaOrden) {
-        this.fechaOrden = fechaOrden;
+    /**
+     * Establece la fecha de la orden.
+     * @param fechaOrden Fecha de la orden
+     */
+    public void setOrderDate(LocalDateTime fechaOrden) {
+        this.orderDate = fechaOrden;
     }
 
-    public String getEstado() {
-        return estado;
+    /**
+     * Obtiene el estado de la orden.
+     * @return Estado
+     */
+    public String getState() {
+        return state;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    /**
+     * Establece el estado de la orden.
+     * @param estado Estado
+     */
+    public void setState(String estado) {
+        this.state = estado;
     }
     
+    /**
+     * Devuelve una representación en String de la orden.
+     * @return String con los datos de la orden
+     */
     @Override
     public String toString() {
         return "Orders{" +
                 "id=" + id +
                 ", clientId=" + clientId +
                 ", numeroCafes=" + (cafes != null ? cafes.size() : 0) +
-                ", precioTotal=" + precioTotal +
-                ", fechaOrden=" + fechaOrden +
-                ", estado='" + estado + '\'' +
+                ", precioTotal=" + totalValue +
+                ", fechaOrden=" + orderDate +
+                ", estado='" + state + '\'' +
                 '}';
     }
 }

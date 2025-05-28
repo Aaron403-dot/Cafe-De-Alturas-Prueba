@@ -20,8 +20,9 @@ import com.Gammatech.Coffes.Entities.Clients;
 import com.Gammatech.Coffes.Repo.RepoClient;
 
 /**
- *
- * @author Usuario
+ * Servicio para la gestión de clientes.
+ * Proporciona operaciones CRUD y de negocio para la entidad Clients.
+ * @author Aaron
  */
 @Service
 public class ServiceClients {
@@ -32,27 +33,47 @@ public class ServiceClients {
         this.repoClient = repoClient;
     }
 
+    /**
+     * Obtiene la lista completa de clientes.
+     * @return Lista de clientes
+     */
     public List<Clients> getListaClients() {
         return (List<Clients>) repoClient.findAll();
     }
 
+    /**
+     * Obtiene una página de clientes.
+     * @param pagina Número de página
+     * @param tamanoPagina Tamaño de la página
+     * @return Página de clientes
+     */
     @Transactional
     public Page<Clients> getListaClients(int pagina , int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina);
         return repoClient.findAll(pageable);
     }
 
+    /**
+     * Obtiene un cliente por su ID.
+     * @param id ID del cliente
+     * @return Cliente encontrado
+     */
     public Clients getClientById(long id) {
         return repoClient.findById(id).orElseThrow(() -> 
             new IllegalArgumentException("Cliente no encontrado"));
     }
 
+    /**
+     * Guarda un nuevo cliente en la base de datos.
+     * @param client Cliente a guardar
+     * @return Cliente guardado
+     */
     @Transactional
-    public Clients addClient(Clients client) {
+    public Clients save(Clients client) {
         if (client == null || 
-            client.getNombre() == null || client.getNombre().isEmpty() ||
+            client.getName() == null || client.getName().isEmpty() ||
             client.getEmail() == null || client.getEmail().isEmpty() ||
-            client.getTelefono() == null || client.getTelefono().isEmpty()) {
+            client.getPhone() == null || client.getPhone().isEmpty()) {
             throw new IllegalArgumentException("El cliente no puede ser nulo o tener campos vacíos");
         }
         try {
@@ -62,12 +83,17 @@ public class ServiceClients {
         }
     }
     
+    /**
+     * Actualiza completamente un cliente existente.
+     * @param client Cliente con datos actualizados
+     * @return Cliente actualizado
+     */
     @Transactional
-    public Clients putClient(Clients client) {
+    public Clients put(Clients client) {
         if (client == null || 
-            client.getNombre() == null || client.getNombre().isEmpty() ||
+            client.getName() == null || client.getName().isEmpty() ||
             client.getEmail() == null || client.getEmail().isEmpty() ||
-            client.getTelefono() == null || client.getTelefono().isEmpty()) {
+            client.getPhone() == null || client.getPhone().isEmpty()) {
             throw new IllegalArgumentException("El cliente no puede ser nulo o tener campos vacíos");
         }
         
@@ -82,8 +108,13 @@ public class ServiceClients {
         }
     }
 
+    /**
+     * Elimina un cliente por su ID.
+     * @param id ID del cliente
+     * @return Cliente eliminado
+     */
     @Transactional
-    public Optional<Clients> deleteClient(long id) {
+    public Optional<Clients> delete(long id) {
         Optional<Clients> optionalClients = repoClient.findById(id);
         if(repoClient.findAll() == null || ((List<Clients>) repoClient.findAll()).isEmpty()) {
             throw new EmptyStackException();
@@ -96,25 +127,31 @@ public class ServiceClients {
         return optionalClients;
     }
 
+    /**
+     * Actualiza parcialmente un cliente existente.
+     * @param id ID del cliente
+     * @param client Datos a actualizar
+     * @return Cliente actualizado
+     */
     @Transactional
-    public Clients patchClient(long id, Clients client) {
+    public Clients patch(long id, Clients client) {
         Clients existingClient = repoClient.findById(id).orElseThrow(() -> 
             new IllegalArgumentException("Cliente no encontrado"));
         
-        if (client.getNombre() != null && !client.getNombre().isEmpty()) {
-            existingClient.setNombre(client.getNombre());
+        if (client.getName() != null && !client.getName().isEmpty()) {
+            existingClient.setName(client.getName());
         }
-        if (client.getApellidos() != null && !client.getApellidos().isEmpty()) {
-            existingClient.setApellidos(client.getApellidos());
+        if (client.getSurName() != null && !client.getSurName().isEmpty()) {
+            existingClient.setSurName(client.getSurName());
         }
         if (client.getEmail() != null && !client.getEmail().isEmpty()) {
             existingClient.setEmail(client.getEmail());
         }
-        if (client.getTelefono() != null && !client.getTelefono().isEmpty()) {
-            existingClient.setTelefono(client.getTelefono());
+        if (client.getPhone() != null && !client.getPhone().isEmpty()) {
+            existingClient.setPhone(client.getPhone());
         }
-        if (client.getDireccion() != null && !client.getDireccion().isEmpty()) {
-            existingClient.setDireccion(client.getDireccion());
+        if (client.getDirection() != null && !client.getDirection().isEmpty()) {
+            existingClient.setDirection(client.getDirection());
         }
         
         try {

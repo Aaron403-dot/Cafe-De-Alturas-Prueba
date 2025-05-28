@@ -2,15 +2,20 @@ package com.Gammatech.Coffes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @SpringBootApplication
 public class CoffesApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CoffesApplication.class, args);
+	public static void main(String[] args) {SpringApplication.run(CoffesApplication.class, args);}
+
+	@Bean
+	public PasswordEncoder passwordEncoder(){
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		return passwordEncoder;
 	}
 
-
-	//TODO: Limpiar el código, eliminar comentarios innecesarios y mejorar la legibilidad Cambiar idioma a ingles para que sea mas facil de entender para todos los desarrolladores
 }

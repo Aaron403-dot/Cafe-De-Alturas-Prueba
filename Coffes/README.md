@@ -27,25 +27,25 @@
 ## Tareas Pendientes 📝
 
 1. **Controladores**
-   - [ ] ClientController
-     - [ ] GET /clients (Obtener lista de clientes)
-     - [ ] GET /clients/{id} (Obtener cliente por ID)
-     - [ ] POST /clients (Crear nuevo cliente)
-     - [ ] PUT /clients/{id} (Actualizar cliente)
-     - [ ] DELETE /clients/{id} (Eliminar cliente)
-     - [ ] PATCH /clients/{id} (Actualizar parcialmente cliente)
+   - [X] ClientController
+     - [X] GET /clients (Obtener lista de clientes)
+     - [X] GET /clients/{id} (Obtener cliente por ID)
+     - [X] POST /clients (Crear nuevo cliente)
+     - [X] PUT /clients/{id} (Actualizar cliente)
+     - [X] DELETE /clients/{id} (Eliminar cliente)
+     - [X] PATCH /clients/{id} (Actualizar parcialmente cliente)
 
-   - [ ] OrderController
-     - [ ] GET /orders (Obtener lista de pedidos)
-     - [ ] GET /orders/{id} (Obtener pedido por ID)
-     - [ ] POST /orders (Crear nuevo pedido)
-     - [ ] PUT /orders/{id} (Actualizar pedido)
-     - [ ] DELETE /orders/{id} (Eliminar pedido)
-     - [ ] PATCH /orders/{id} (Actualizar parcialmente pedido)
+   - [X] OrderController
+     - [X] GET /orders (Obtener lista de pedidos)
+     - [X] GET /orders/{id} (Obtener pedido por ID)
+     - [X] POST /orders (Crear nuevo pedido)
+     - [X] PUT /orders/{id} (Actualizar pedido)
+     - [X] DELETE /orders/{id} (Eliminar pedido)
+     - [X] PATCH /orders/{id} (Actualizar parcialmente pedido)
 
 2. **Validaciones**
-   - [ ] Implementar validaciones de datos en los controladores
-   - [ ] Manejo de excepciones personalizadas
+   - [X] Implementar validaciones de datos en los controladores
+   - [X] Manejo de excepciones personalizadas
 
 3. **Documentación**
    - [ ] Documentar API con Swagger/OpenAPI
@@ -59,23 +59,7 @@
    - [ ] Implementar autenticación
    - [ ] Implementar autorización
 
-6. **Frontend**
-   - [ ] Diseño de interfaz de usuario
-   - [ ] Implementación de vistas
-   - [ ] Integración con backend
-
-7. **Despliegue**
-   - [ ] Configuración de base de datos
+6. **Despliegue**
+   - [X] Configuración de base de datos
    - [ ] Scripts de despliegue
    - [ ] Documentación de despliegue
-
-## TODO
-- [ ] Revisar y actualizar la lógica de negocio en los servicios
-- [ ] Implementar sistema de gestión de stock
-- [ ] Añadir sistema de notificaciones
-- [ ] Implementar sistema de reportes
-- [ ] Optimizar consultas a la base de datos
-
-<div style="color: red; font-size: 24px; font-weight: bold; text-align: center; margin-top: 30px;">
-OJO: revisar tarea solicitada denuevo
-</div> 

@@ -23,6 +23,11 @@ import com.Gammatech.Coffes.Service.ServiceOrders;
 
 
 
+/**
+ * Controlador para gestionar los pedidos de la cafetería.
+ * Proporciona endpoints CRUD para la entidad Orders.
+ * @author Aaron
+ */
 @RestController
 public class CoffeShopOrderController {
 	
@@ -37,6 +42,12 @@ public class CoffeShopOrderController {
 		this.serviceOrders = serviceOrder;
 	}
 	
+	/**
+	 * Obtiene una página de pedidos.
+	 * @param page Página solicitada
+	 * @param size Tamaño de la página
+	 * @return Página de pedidos
+	 */
 	@GetMapping("/orders")
 	public ResponseEntity<PageResponseOrders> getOrders(@RequestParam(defaultValue = "0") int page,
             					@RequestParam(defaultValue = "2") int size) {
@@ -50,6 +61,11 @@ public class CoffeShopOrderController {
 		return ResponseEntity.status(HttpStatus.OK).body(pageResponseOrders);
 	}
 	
+	/**
+	 * Obtiene un pedido por su ID.
+	 * @param id ID del pedido
+	 * @return Pedido encontrado o null si no existe
+	 */
 	@GetMapping("/orders/{id}")
 	public ResponseEntity<Optional<Orders>> getOrderById(@PathVariable long id) {
 		try {
@@ -59,6 +75,11 @@ public class CoffeShopOrderController {
 		}
 	}
 	
+	/**
+	 * Obtiene los pedidos de un cliente por su ID.
+	 * @param id ID del cliente
+	 * @return Lista de pedidos del cliente
+	 */
 	@GetMapping("/orders/client/{id}")
 	public ResponseEntity<List<Orders>> getOrdersByClientId(@PathVariable long id) {
 		try {
@@ -69,10 +90,15 @@ public class CoffeShopOrderController {
 	}
 
 
+	/**
+	 * Crea un nuevo pedido.
+	 * @param order Pedido a crear
+	 * @return Pedido creado
+	 */
 	@PostMapping(value = "/orders", consumes = "application/json")
 	public ResponseEntity<Orders> addOrder(@RequestBody Orders order) {
 		try {
-			Orders orders = serviceOrders.addOrder(order);
+			Orders orders = serviceOrders.save(order);
 			return ResponseEntity.status(201).body(orders);
 		} catch (IllegalArgumentException e) {
 			System.err.println("Error al agregar la orden: " + e.getMessage());
@@ -80,19 +106,30 @@ public class CoffeShopOrderController {
 		}
 	}
 	
+	/**
+	 * Actualiza completamente un pedido existente.
+	 * @param id ID del pedido
+	 * @param order Datos actualizados
+	 * @return Pedido actualizado
+	 */
 	@PutMapping("/orders/{id}")
 	public ResponseEntity<Orders> putOrder(@PathVariable long id, @RequestBody Orders order) {
 		try {
-			return ResponseEntity.status(200).body(serviceOrders.putOrder(order));
+			return ResponseEntity.status(200).body(serviceOrders.put(order));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(404).body(null);
 		}
 	}
 	
+	/**
+	 * Elimina un pedido por su ID.
+	 * @param id ID del pedido
+	 * @return Pedido eliminado o null si no existe
+	 */
 	@DeleteMapping("/orders/{id}")
 	public ResponseEntity<Orders> deleteOrder(@PathVariable long id) {
 		try {
-			Optional<Orders> orders = serviceOrders.deleteOrder(id);
+			Optional<Orders> orders = serviceOrders.delete(id);
 			return ResponseEntity.status(HttpStatus.OK).body(orders.orElse(null));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
@@ -102,10 +139,16 @@ public class CoffeShopOrderController {
 		}
 	}
 	
+	/**
+	 * Actualiza parcialmente un pedido existente.
+	 * @param id ID del pedido
+	 * @param order Datos a actualizar
+	 * @return Pedido actualizado
+	 */
 	@PatchMapping("/orders/{id}")
 	public ResponseEntity<Orders> patchOrder(@PathVariable long id, @RequestBody Orders order) {
 		try {
-			Orders nOrder = serviceOrders.patchOrder(id, order);
+			Orders nOrder = serviceOrders.patch(id, order);
 			return ResponseEntity.status(200).body(nOrder);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);

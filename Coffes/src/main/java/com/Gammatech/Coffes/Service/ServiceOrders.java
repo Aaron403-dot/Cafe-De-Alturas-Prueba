@@ -20,8 +20,9 @@ import com.Gammatech.Coffes.Entities.Orders;
 import com.Gammatech.Coffes.Repo.RepoOrder;
 
 /**
- *
- * @author Usuario
+ * Servicio para la gestión de pedidos.
+ * Proporciona operaciones CRUD y de negocio para la entidad Orders.
+ * @author Aaron
  */
 @Service
 public class ServiceOrders {
@@ -34,6 +35,10 @@ public class ServiceOrders {
         this.serviceCoffe = serviceCoffe;
     }
 
+    /**
+     * Valida que los cafés de una orden existan y sean correctos.
+     * @param order Orden a validar
+     */
     private void validarCafesEnOrden(Orders order) {
         if (order.getCafes() == null || order.getCafes().isEmpty()) {
             throw new IllegalArgumentException("La orden debe contener al menos un café");
@@ -47,14 +52,14 @@ public class ServiceOrders {
             try {
                 Optional<Coffe> coffeCompleto = serviceCoffe.getCoffeById(cafe.getId());
                 // Actualizar el precio del café simplificado con el precio real
-                cafe.setPrecio(coffeCompleto.get().getPrice());
+                cafe.setPrice(coffeCompleto.get().getPrice());
                 // Guardar la referencia al café completo
                 cafe.setCoffeCompleto(coffeCompleto.get());
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("El café con ID " + cafe.getId() + " no existe");
             }
 
-            if (cafe.getCantidad() <= 0) {
+            if (cafe.getQuantity() <= 0) {
                 throw new IllegalArgumentException("La cantidad del café debe ser mayor a 0");
             }
 
@@ -64,16 +69,30 @@ public class ServiceOrders {
         }
     }
 
+    /**
+     * Obtiene la lista completa de pedidos.
+     * @return Lista de pedidos
+     */
     public List<Orders> getListaOrders() {
         return (List<Orders>) repoOrder.findAll();
     }
 
+    /**
+     * Obtiene una página de pedidos.
+     * @param pagina Número de página
+     * @param tamanoPagina Tamaño de la página
+     * @return Página de pedidos
+     */
     public Page<Orders> getListaOrders(int pagina , int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina);
         return repoOrder.findAll(pageable);
     }
 
-
+    /**
+     * Obtiene un pedido por su ID.
+     * @param id ID del pedido
+     * @return Pedido encontrado
+     */
     public Optional<Orders> getOrderById(long id) {
         Optional <Orders> order = repoOrder.findById(id);
         if (order.isEmpty()) {
@@ -82,7 +101,12 @@ public class ServiceOrders {
         return order;
     }
 
-    public Orders addOrder(Orders order) {
+    /**
+     * Guarda un nuevo pedido en la base de datos.
+     * @param order Pedido a guardar
+     * @return Pedido guardado
+     */
+    public Orders save(Orders order) {
         if (order == null || order.getClientId() == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
         }
@@ -92,7 +116,12 @@ public class ServiceOrders {
     }
     
 
-    public Orders putOrder(Orders order) {
+    /**
+     * Actualiza completamente un pedido existente.
+     * @param order Pedido con datos actualizados
+     * @return Pedido actualizado
+     */
+    public Orders put(Orders order) {
         if (order == null || order.getClientId() == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo y debe tener un cliente asignado");
         }
@@ -101,7 +130,12 @@ public class ServiceOrders {
         return repoOrder.save(order);
     }
 
-    public Optional<Orders> deleteOrder(long id) {
+    /**
+     * Elimina un pedido por su ID.
+     * @param id ID del pedido
+     * @return Pedido eliminado
+     */
+    public Optional<Orders> delete(long id) {
         Optional<Orders> orderDel = this.getOrderById(id);
         if(repoOrder.findAll() == null || ((List<Orders>) repoOrder.findAll()).isEmpty()) {
             throw new EmptyStackException();
@@ -113,7 +147,13 @@ public class ServiceOrders {
         return orderDel;
     }
 
-    public Orders patchOrder(long id, Orders order) {
+    /**
+     * Actualiza parcialmente un pedido existente.
+     * @param id ID del pedido
+     * @param order Datos a actualizar
+     * @return Pedido actualizado
+     */
+    public Orders patch(long id, Orders order) {
         Orders nOrder = repoOrder.findById(id).orElseThrow(() -> 
             new IllegalArgumentException("No se puede modificar el pedido. ID inválido"));
         
@@ -123,18 +163,23 @@ public class ServiceOrders {
         if (order.getCafes() != null && !order.getCafes().isEmpty() && !nOrder.getCafes().equals(order.getCafes())) {
             nOrder.setCafes(order.getCafes());
         }
-        if (order.getPrecioTotal() > 0) {
-            nOrder.setPrecioTotal(order.getPrecioTotal());
+        if (order.getTotalValue() > 0) {
+            nOrder.setTotalValue(order.getTotalValue());
         }
-        if (order.getEstado() != null && !order.getEstado().isEmpty() && !order.getEstado().isBlank() && !nOrder.getEstado().equals(order.getEstado())) {
-            nOrder.setEstado(order.getEstado());
+        if (order.getState() != null && !order.getState().isEmpty() && !order.getState().isBlank() && !nOrder.getState().equals(order.getState())) {
+            nOrder.setState(order.getState());
         }
-        if (order.getFechaOrden() != null && !nOrder.getFechaOrden().equals(order.getFechaOrden())) {
-            nOrder.setFechaOrden(order.getFechaOrden());
+        if (order.getOrderDate() != null && !nOrder.getOrderDate().equals(order.getOrderDate())) {
+            nOrder.setOrderDate(order.getOrderDate());
         }
         return repoOrder.save(nOrder);
     }
 
+    /**
+     * Obtiene la lista de pedidos de un cliente por su ID.
+     * @param id ID del cliente
+     * @return Lista de pedidos del cliente
+     */
     public List<Orders> getOrdersByClientId(long id) {
         return repoOrder.findByClientId(id);
     }

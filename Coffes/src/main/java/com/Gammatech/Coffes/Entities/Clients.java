@@ -8,6 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
+/**
+ * Entidad que representa un cliente de la cafetería.
+ * @author Aaron
+ */
 @Entity
 public class Clients {
 	@Id
@@ -19,20 +23,55 @@ public class Clients {
 	private Orders order;
 	
 	@Column(nullable = false)
-	private String nombre;
+	private String name;
 
 	@Column
-	private String apellidos;
+	private String surName;
 	
 	@Column(nullable = false)
 	private String email;
 	
 	@Column(nullable = false)
-	private String telefono;
+	private String phone;
 	
 	@Column
-	private String direccion;
+	private String direction;
 	
+	@Column(nullable = false)
+	private String userId;
+
+	/**
+	 * Obtiene el pedido asociado al cliente.
+	 * @return Pedido
+	 */
+	public Orders getOrder() {
+		return order;
+	}
+
+	/**
+	 * Asocia un pedido al cliente.
+	 * @param order Pedido
+	 */
+	public void setOrder(Orders order) {
+		this.order = order;
+	}
+
+	/**
+	 * Obtiene el identificador de usuario asociado.
+	 * @return ID de usuario
+	 */
+	public String getUserId() {
+		return userId;
+	}
+
+	/**
+	 * Establece el identificador de usuario asociado.
+	 * @param userId ID de usuario
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	// Constructor vacío
 	public Clients() {
 	}
@@ -40,79 +79,122 @@ public class Clients {
 	// Constructor con todos los parámetros
 	public Clients(Long id, String nombre, String apellidos, String email, String telefono, String direccion) {
 		this.id = id;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
+		this.name = nombre;
+		this.surName = apellidos;
 		this.email = email;
-		this.telefono = telefono;
-		this.direccion = direccion;
+		this.phone = telefono;
+		this.direction = direccion;
 	}
 	
-	// Getters y Setters
+	/**
+	 * Obtiene el identificador del cliente.
+	 * @return ID
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * Establece el identificador del cliente.
+	 * @param id ID
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Orders getOrders() {
-		return order;
+	/**
+	 * Obtiene el nombre del cliente.
+	 * @return Nombre
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public void setOrders(Orders orders) {
-		this.order = orders;
+	/**
+	 * Establece el nombre del cliente.
+	 * @param nombre Nombre
+	 */
+	public void setName(String nombre) {
+		this.name = nombre;
 	}
 
-	public String getNombre() {
-		return nombre;
+	/**
+	 * Obtiene los apellidos del cliente.
+	 * @return Apellidos
+	 */
+	public String getSurName() {
+		return surName;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	/**
+	 * Establece los apellidos del cliente.
+	 * @param apellidos Apellidos
+	 */
+	public void setSurName(String apellidos) {
+		this.surName = apellidos;
 	}
 
-	public String getApellidos() {
-		return apellidos;
-	}
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
-
+	/**
+	 * Obtiene el email del cliente.
+	 * @return Email
+	 */
 	public String getEmail() {
 		return email;
 	}
 
+	/**
+	 * Establece el email del cliente.
+	 * @param email Email
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public String getTelefono() {
-		return telefono;
+	/**
+	 * Obtiene el teléfono del cliente.
+	 * @return Teléfono
+	 */
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
+	/**
+	 * Establece el teléfono del cliente.
+	 * @param telefono Teléfono
+	 */
+	public void setPhone(String telefono) {
+		this.phone = telefono;
 	}
 
-	public String getDireccion() {
-		return direccion;
+	/**
+	 * Obtiene la dirección del cliente.
+	 * @return Dirección
+	 */
+	public String getDirection() {
+		return direction;
 	}
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+	/**
+	 * Establece la dirección del cliente.
+	 * @param direccion Dirección
+	 */
+	public void setDirection(String direccion) {
+		this.direction = direccion;
 	}
 	
+	/**
+	 * Devuelve una representación en String del cliente.
+	 * @return String con los datos del cliente
+	 */
 	@Override
 	public String toString() {
 		return "Clients{" +
 				"id=" + id +
-				", nombre='" + nombre + '\'' +
-				", apellidos='" + apellidos + '\'' +
+				", nombre='" + name + '\'' +
+				", apellidos='" + surName + '\'' +
 				", email='" + email + '\'' +
-				", telefono='" + telefono + '\'' +
-				", direccion='" + direccion + '\'' +
+				", telefono='" + phone + '\'' +
+				", direccion='" + direction + '\'' +
 				'}';
 	}
 }

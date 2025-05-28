@@ -20,8 +20,9 @@ import com.Gammatech.Coffes.Repo.RepoCoffe;
 import jakarta.transaction.Transactional;
 
 /**
- *
- * @author Usuario
+ * Servicio para la gestión de cafés.
+ * Proporciona operaciones CRUD y de negocio para la entidad Coffe.
+ * @author Aaron
  */
 @Service
 public class ServiceCoffe {
@@ -33,17 +34,31 @@ public class ServiceCoffe {
         this.repoCoffe = repoCoffe;
     }
 
+    /**
+     * Obtiene la lista completa de cafés.
+     * @return Lista de cafés
+     */
     public List<Coffe> getListaCoffe() {
         return (List<Coffe>) repoCoffe.findAll();
     }
 
+    /**
+     * Obtiene una página de cafés.
+     * @param pagina Número de página
+     * @param tamanoPagina Tamaño de la página
+     * @return Página de cafés
+     */
     @Transactional
     public Page<Coffe> getListaCoffe(int pagina , int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina);
         return repoCoffe.findAll(pageable);
     }
 
-
+    /**
+     * Obtiene un café por su ID.
+     * @param id ID del café
+     * @return Café encontrado
+     */
     public Optional<Coffe> getCoffeById(long id) {
         Optional<Coffe> optionalCoffe = repoCoffe.findById(id);
         if (optionalCoffe.isEmpty()) {
@@ -52,8 +67,13 @@ public class ServiceCoffe {
         return optionalCoffe;
     }
 
+    /**
+     * Guarda un nuevo café en la base de datos.
+     * @param coffe Café a guardar
+     * @return Café guardado
+     */
     @Transactional
-    public Coffe addCoffe(Coffe coffe) {
+    public Coffe save(Coffe coffe) {
         if (coffe == null || 
             coffe.getName() == null || coffe.getName().isEmpty() ||
             coffe.getPrice() <= 0 ||
@@ -68,8 +88,13 @@ public class ServiceCoffe {
         return coffe;
     }
     
+    /**
+     * Actualiza completamente un café existente.
+     * @param coffe Café con datos actualizados
+     * @return Café actualizado
+     */
     @Transactional
-    public Coffe putCoffe(Coffe coffe) {
+    public Coffe put(Coffe coffe) {
         if (coffe == null || 
             coffe.getName() == null || coffe.getName().isEmpty() ||
             coffe.getPrice() <= 0 ||
@@ -83,8 +108,13 @@ public class ServiceCoffe {
         return repoCoffe.save(coffe);
     }
 
+    /**
+     * Elimina un café por su ID.
+     * @param id ID del café
+     * @return Café eliminado
+     */
     @Transactional
-    public Optional<Coffe> deleteCoffe(long id) {
+    public Optional<Coffe> delete(long id) {
         Optional<Coffe> optionalCoffe = repoCoffe.findById(id);
         if(repoCoffe.findAll() == null || ((List<Coffe>) repoCoffe.findAll()).isEmpty()) {
             throw new EmptyStackException();
@@ -97,8 +127,14 @@ public class ServiceCoffe {
         return optionalCoffe;
     }
 
+    /**
+     * Actualiza parcialmente un café existente.
+     * @param id ID del café
+     * @param coffe Datos a actualizar
+     * @return Café actualizado
+     */
     @Transactional
-    public Coffe patchCoffe(long id, Coffe coffe) {
+    public Coffe patch(long id, Coffe coffe) {
         Coffe nCoffe = repoCoffe.findById(id).orElseThrow(() -> 
             new EmptyStackException());
         

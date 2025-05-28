@@ -19,8 +19,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 
 /**
- *
- * @author Usuario
+ * Entidad que representa un café simplificado dentro de una orden.
+ * @author Aaron
  */
 @Entity
 public class CoffeeSimplyfied {
@@ -29,10 +29,10 @@ public class CoffeeSimplyfied {
     private long id;
 
     @Column
-    private double precio;
+    private double price;
 
     @Column
-    private int cantidad;
+    private int quantity;
 
     @JsonIgnore
     private transient Coffe coffeCompleto;
@@ -46,43 +46,89 @@ public class CoffeeSimplyfied {
 
     public CoffeeSimplyfied(long id, double precio, int cantidad) {
         this.id = id;
-        this.precio = precio;
-        this.cantidad = cantidad;
+        this.price = precio;
+        this.quantity = cantidad;
     }
 
+    /**
+     * Obtiene el identificador del café simplificado.
+     *
+     * @return ID
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Establece el identificador del café simplificado.
+     *
+     * @param id ID
+     */
     public void setId(long id) {
         this.id = id;
     }
 
-    public double getPrecio() {
-        return precio;
+    /**
+     * Obtiene el precio del café simplificado.
+     *
+     * @return Precio
+     */
+    public double getPrice() {
+        return price;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    /**
+     * Establece el precio del café simplificado.
+     *
+     * @param precio Precio
+     */
+    public void setPrice(double precio) {
+        this.price = precio;
     }
 
-    public int getCantidad() {
-        return cantidad;
+    /**
+     * Obtiene la cantidad de este café en la orden.
+     *
+     * @return Cantidad
+     */
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+    /**
+     * Establece la cantidad de este café en la orden.
+     *
+     * @param cantidad Cantidad
+     */
+    public void setQuantity(int cantidad) {
+        this.quantity = cantidad;
     }
 
+    /**
+     * Obtiene el objeto Coffe completo asociado.
+     *
+     * @return Coffe completo
+     */
     @JsonIgnore
     public Coffe getCoffeCompleto() {
         return coffeCompleto;
     }
 
+    /**
+     * Establece el objeto Coffe completo asociado.
+     *
+     * @param coffeCompleto Coffe completo
+     */
     public void setCoffeCompleto(Coffe coffeCompleto) {
         this.coffeCompleto = coffeCompleto;
     }
 
+    /**
+     * Valida si el café existe en el sistema.
+     *
+     * @param serviceCoffe Servicio de cafés
+     * @return true si es válido, false en caso contrario
+     */
     public boolean validarCoffe(ServiceCoffe serviceCoffe) {
         try {
             Optional<Coffe> coffe = serviceCoffe.getCoffeById(this.id);
@@ -92,16 +138,31 @@ public class CoffeeSimplyfied {
         }
     }
 
+    /**
+     * Lanza excepción si el café no es válido.
+     *
+     * @param serviceCoffe Servicio de cafés
+     */
     public void asegurarCoffeValido(ServiceCoffe serviceCoffe) {
         if (!validarCoffe(serviceCoffe)) {
             throw new IllegalArgumentException("El café con ID " + this.id + " no existe o no es válido");
         }
     }
 
+    /**
+     * Obtiene la orden asociada.
+     *
+     * @return Orden
+     */
     public Orders getOrders() {
         return orders;
     }
 
+    /**
+     * Establece la orden asociada.
+     *
+     * @param orders Orden
+     */
     public void setOrders(Orders orders) {
         this.orders = orders;
     }

@@ -28,6 +28,8 @@ import com.Gammatech.Coffes.Service.ServiceCoffe;
 
 
 /**
+ * Controlador para gestionar los cafés de la cafetería.
+ * Proporciona endpoints CRUD para la entidad Coffe.
  *
  * @author Aaron del Cristo Suarez Suarez
  */
@@ -35,13 +37,19 @@ import com.Gammatech.Coffes.Service.ServiceCoffe;
 @RestController
 public class CoffeShopController {	
 
-	private ServiceCoffe serviceCoffe;
+	private final ServiceCoffe serviceCoffe;
 
 
 	public CoffeShopController(ServiceCoffe serviceCoffe) {
 		this.serviceCoffe = serviceCoffe;
 	}
 
+	/**
+	 * Obtiene una página de cafés.
+	 * @param page Página solicitada
+	 * @param size Tamaño de la página
+	 * @return Página de cafés
+	 */
 	@GetMapping("/coffes")
 	public ResponseEntity<PageResponseCoffe> getListaCoffe(@RequestParam(defaultValue = "0") int page,
             					@RequestParam(defaultValue = "2") int size) {	
@@ -55,6 +63,11 @@ public class CoffeShopController {
 		return ResponseEntity.status(HttpStatus.OK).body(pageResponseCoffe);
 	}
 
+	/**
+	 * Obtiene un café por su ID.
+	 * @param id ID del café
+	 * @return Café encontrado o null si no existe
+	 */
 	@GetMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> getCoffeById(@PathVariable long id) {
 		try {
@@ -64,10 +77,15 @@ public class CoffeShopController {
 		}
 	}
 	
+	/**
+	 * Crea un nuevo café.
+	 * @param entity Café a crear
+	 * @return Café creado
+	 */
 	@PostMapping("/coffes")
 	public ResponseEntity<Coffe> postCoffe(@RequestBody Coffe entity) {
 		try {
-			Coffe coffes=serviceCoffe.addCoffe(entity);
+			Coffe coffes=serviceCoffe.save(entity);
 			return ResponseEntity.status(201).body(coffes);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
@@ -75,10 +93,16 @@ public class CoffeShopController {
 		
 	}
 	
+	/**
+	 * Actualiza completamente un café existente.
+	 * @param id ID del café
+	 * @param entity Datos actualizados
+	 * @return Café actualizado
+	 */
 	@PutMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> putCoffe(@PathVariable int id, @RequestBody Coffe entity) {
 		try {
-			return ResponseEntity.status(200).body(serviceCoffe.putCoffe(entity));
+			return ResponseEntity.status(200).body(serviceCoffe.put(entity));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
 		}
@@ -87,10 +111,15 @@ public class CoffeShopController {
 		}
 	}
 
+	/**
+	 * Elimina un café por su ID.
+	 * @param id ID del café
+	 * @return Café eliminado o null si no existe
+	 */
 	@DeleteMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> deleteCoffe(@PathVariable long id) {
 		try {
-			Optional<Coffe> coffe = serviceCoffe.deleteCoffe(id);
+			Optional<Coffe> coffe = serviceCoffe.delete(id);
 			return ResponseEntity.status(HttpStatus.OK).body(coffe.orElse(null));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
@@ -100,10 +129,16 @@ public class CoffeShopController {
 		}
 	}
 
+	/**
+	 * Actualiza parcialmente un café existente.
+	 * @param id ID del café
+	 * @param entity Datos a actualizar
+	 * @return Café actualizado
+	 */
 	@PatchMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> patchCoffe(@PathVariable int id, @RequestBody Coffe entity) {
 		try {
-			Coffe nCoffe = serviceCoffe.patchCoffe(id, entity);
+			Coffe nCoffe = serviceCoffe.patch(id, entity);
 			return ResponseEntity.status(200).body(nCoffe);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(400).body(null);
