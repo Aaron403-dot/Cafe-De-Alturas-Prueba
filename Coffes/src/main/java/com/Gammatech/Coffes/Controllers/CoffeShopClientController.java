@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,6 +41,7 @@ public class CoffeShopClientController {
 	 * @param size Tamaño de la página
 	 * @return Página de clientes
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/clients")
 	public ResponseEntity<PageResponseClients> getListaClients(@RequestParam(defaultValue = "0") int page,
             					@RequestParam(defaultValue = "2") int size) {
@@ -58,6 +60,7 @@ public class CoffeShopClientController {
 	 * @param id ID del cliente
 	 * @return Cliente encontrado o null si no existe
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/clients/{id}")
 	public ResponseEntity<Clients> getClientById(@PathVariable long id) {
 		try {
@@ -72,6 +75,7 @@ public class CoffeShopClientController {
 	 * @param client Cliente a crear
 	 * @return Cliente creado
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/clients")
 	public ResponseEntity<Clients> addClient(@RequestBody Clients client) {
 		try {
@@ -87,6 +91,7 @@ public class CoffeShopClientController {
 	 * @param client Datos actualizados
 	 * @return Cliente actualizado
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/clients/{id}")
 	public ResponseEntity<Clients> putClient(@PathVariable long id, @RequestBody Clients client) {
 		try {
@@ -101,6 +106,7 @@ public class CoffeShopClientController {
 	 * @param id ID del cliente
 	 * @return Cliente eliminado o null si no existe
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/clients/{id}")
 	public ResponseEntity<Clients> deleteClient(@PathVariable long id) {
 		try {
@@ -120,6 +126,7 @@ public class CoffeShopClientController {
 	 * @param client Datos a actualizar
 	 * @return Cliente actualizado
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/clients/{id}")
 	public ResponseEntity<Clients> patchClient(@PathVariable long id, @RequestBody Clients client) {
 		try {

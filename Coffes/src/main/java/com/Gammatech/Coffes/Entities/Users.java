@@ -5,12 +5,14 @@
 
 package com.Gammatech.Coffes.Entities;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 /**
  * Entidad que representa un usuario del sistema.
  * @author Aaron
  */
+@Entity
 public class Users {
 
     @Id

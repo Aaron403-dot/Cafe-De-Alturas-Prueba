@@ -7,6 +7,8 @@ package com.Gammatech.Coffes.Service;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.Gammatech.Coffes.Entities.Users;
 import com.Gammatech.Coffes.Repo.RepoUsers;
 
@@ -16,6 +18,7 @@ import com.Gammatech.Coffes.Repo.RepoUsers;
  * Proporciona operaciones CRUD y de negocio para la entidad Users.
  * @author Aaron
  */
+@Service
 public class ServiceUsers {
 
     private final RepoUsers repoUsers;
@@ -30,7 +33,7 @@ public class ServiceUsers {
      * @return Optional con el usuario encontrado
      */
     public Optional<Users> findByUsername(String username) {
-        return repoUsers.findById(username);
+        return repoUsers.findByUsername(username);
     }
 
     /**
@@ -54,7 +57,6 @@ public class ServiceUsers {
      * @return true si existe, false en caso contrario
      */
     public boolean existsByUsername(String username) {
-        return repoUsers.existsById(username);
+        return repoUsers.existsByUsername(username);
     }
-
 }

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -48,6 +49,7 @@ public class CoffeShopOrderController {
 	 * @param size Tamaño de la página
 	 * @return Página de pedidos
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/orders")
 	public ResponseEntity<PageResponseOrders> getOrders(@RequestParam(defaultValue = "0") int page,
             					@RequestParam(defaultValue = "2") int size) {
@@ -66,6 +68,7 @@ public class CoffeShopOrderController {
 	 * @param id ID del pedido
 	 * @return Pedido encontrado o null si no existe
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/orders/{id}")
 	public ResponseEntity<Optional<Orders>> getOrderById(@PathVariable long id) {
 		try {
@@ -80,6 +83,7 @@ public class CoffeShopOrderController {
 	 * @param id ID del cliente
 	 * @return Lista de pedidos del cliente
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/orders/client/{id}")
 	public ResponseEntity<List<Orders>> getOrdersByClientId(@PathVariable long id) {
 		try {
@@ -95,6 +99,7 @@ public class CoffeShopOrderController {
 	 * @param order Pedido a crear
 	 * @return Pedido creado
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PostMapping(value = "/orders", consumes = "application/json")
 	public ResponseEntity<Orders> addOrder(@RequestBody Orders order) {
 		try {
@@ -112,6 +117,7 @@ public class CoffeShopOrderController {
 	 * @param order Datos actualizados
 	 * @return Pedido actualizado
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/orders/{id}")
 	public ResponseEntity<Orders> putOrder(@PathVariable long id, @RequestBody Orders order) {
 		try {
@@ -126,6 +132,7 @@ public class CoffeShopOrderController {
 	 * @param id ID del pedido
 	 * @return Pedido eliminado o null si no existe
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/orders/{id}")
 	public ResponseEntity<Orders> deleteOrder(@PathVariable long id) {
 		try {
@@ -145,6 +152,7 @@ public class CoffeShopOrderController {
 	 * @param order Datos a actualizar
 	 * @return Pedido actualizado
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/orders/{id}")
 	public ResponseEntity<Orders> patchOrder(@PathVariable long id, @RequestBody Orders order) {
 		try {

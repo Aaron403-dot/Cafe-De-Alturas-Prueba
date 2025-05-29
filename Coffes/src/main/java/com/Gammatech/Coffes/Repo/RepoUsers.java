@@ -1,5 +1,7 @@
 package com.Gammatech.Coffes.Repo;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +10,8 @@ import com.Gammatech.Coffes.Entities.Users;
 @Repository
 public interface RepoUsers extends JpaRepository<Users, String> {
 
+    public boolean existsByUsername(String username);
+
+    public Optional<Users> findByUsername(String username);
 
 }

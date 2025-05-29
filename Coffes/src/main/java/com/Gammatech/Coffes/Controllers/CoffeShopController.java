@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -50,6 +51,7 @@ public class CoffeShopController {
 	 * @param size Tamaño de la página
 	 * @return Página de cafés
 	 */
+    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/coffes")
 	public ResponseEntity<PageResponseCoffe> getListaCoffe(@RequestParam(defaultValue = "0") int page,
             					@RequestParam(defaultValue = "2") int size) {	
@@ -68,6 +70,7 @@ public class CoffeShopController {
 	 * @param id ID del café
 	 * @return Café encontrado o null si no existe
 	 */
+    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> getCoffeById(@PathVariable long id) {
 		try {
@@ -82,6 +85,7 @@ public class CoffeShopController {
 	 * @param entity Café a crear
 	 * @return Café creado
 	 */
+    @PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/coffes")
 	public ResponseEntity<Coffe> postCoffe(@RequestBody Coffe entity) {
 		try {
@@ -99,6 +103,7 @@ public class CoffeShopController {
 	 * @param entity Datos actualizados
 	 * @return Café actualizado
 	 */
+    @PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> putCoffe(@PathVariable int id, @RequestBody Coffe entity) {
 		try {
@@ -116,6 +121,7 @@ public class CoffeShopController {
 	 * @param id ID del café
 	 * @return Café eliminado o null si no existe
 	 */
+    @PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> deleteCoffe(@PathVariable long id) {
 		try {
@@ -135,6 +141,7 @@ public class CoffeShopController {
 	 * @param entity Datos a actualizar
 	 * @return Café actualizado
 	 */
+    @PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/coffes/{id}")
 	public ResponseEntity<Coffe> patchCoffe(@PathVariable int id, @RequestBody Coffe entity) {
 		try {
