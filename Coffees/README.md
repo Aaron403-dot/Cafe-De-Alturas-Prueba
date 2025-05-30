@@ -49,15 +49,15 @@
 
 3. **Documentación**
    - [ ] Documentar API con Swagger/OpenAPI
-   - [ ] Añadir comentarios en el código
+   - [X] Añadir comentarios en el código
 
 4. **Testing**
    - [ ] Tests unitarios para servicios
    - [ ] Tests de integración para controladores
 
 5. **Seguridad**
-   - [ ] Implementar autenticación
-   - [ ] Implementar autorización
+   - [X] Implementar autenticación
+   - [X] Implementar autorización
 
 6. **Despliegue**
    - [X] Configuración de base de datos
