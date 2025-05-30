@@ -40,11 +40,11 @@ public class ServiceOrders {
      * @param order Orden a validar
      */
     private void validarCafesEnOrden(Orders order) {
-        if (order.getCafes() == null || order.getCafes().isEmpty()) {
+        if (order.getCoffee() == null || order.getCoffee().isEmpty()) {
             throw new IllegalArgumentException("La orden debe contener al menos un café");
         }
 
-        for (CoffeeSimplyfied cafe : order.getCafes()) {
+        for (CoffeeSimplyfied cafe : order.getCoffee()) {
             if (cafe == null) {
                 throw new IllegalArgumentException("No se puede agregar un café nulo a la orden");
             }
@@ -160,8 +160,8 @@ public class ServiceOrders {
         if (order.getClientId() != null && !nOrder.getClientId().equals(order.getClientId())) {
             nOrder.setClientId(order.getClientId());
         }
-        if (order.getCafes() != null && !order.getCafes().isEmpty() && !nOrder.getCafes().equals(order.getCafes())) {
-            nOrder.setCafes(order.getCafes());
+        if (order.getCoffee() != null && !order.getCoffee().isEmpty() && !nOrder.getCoffee().equals(order.getCoffee())) {
+            nOrder.setCoffee(order.getCoffee());
         }
         if (order.getTotalValue() > 0) {
             nOrder.setTotalValue(order.getTotalValue());

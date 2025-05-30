@@ -81,6 +81,7 @@ public class CoffeeShopClientsController {
 		try {
 			return ResponseEntity.status(201).body(serviceClients.save(client));
 		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
 			return ResponseEntity.status(400).body(null);
 		}
 	}

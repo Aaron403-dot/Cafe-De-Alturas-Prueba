@@ -37,8 +37,6 @@ public class Clients {
 	@Column
 	private String direction;
 	
-	@Column(nullable = false)
-	private String userId;
 
 	/**
 	 * Obtiene el pedido asociado al cliente.
@@ -54,22 +52,6 @@ public class Clients {
 	 */
 	public void setOrder(Orders order) {
 		this.order = order;
-	}
-
-	/**
-	 * Obtiene el identificador de usuario asociado.
-	 * @return ID de usuario
-	 */
-	public String getUserId() {
-		return userId;
-	}
-
-	/**
-	 * Establece el identificador de usuario asociado.
-	 * @param userId ID de usuario
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	// Constructor vacío

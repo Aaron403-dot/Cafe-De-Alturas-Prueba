@@ -28,20 +28,20 @@ public class Orders {
 
     @OneToMany
     @JoinColumn(name = "cafe_id", nullable = false)
-    private List<CoffeeSimplyfied> cafes; //Array esta los café
+    private List<CoffeeSimplyfied> coffee; //Array esta los café
 
     @Column(nullable = false)
     private double totalValue;
 
     @Column(nullable = false)
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDate = LocalDateTime.now(); // Fecha de la orden
 
     @Column(nullable = false)
     private String state; // PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA
     
     // Constructor vacío
     public Orders() {
-        this.cafes = new ArrayList<>();
+        this.coffee = new ArrayList<>();
         this.orderDate = LocalDateTime.now();
     }
     
@@ -49,7 +49,7 @@ public class Orders {
     public Orders(Long id, Long clientId, String estado) {
         this.id = id;
         this.clientId = clientId;
-        this.cafes = new ArrayList<>();
+        this.coffee = new ArrayList<>();
         this.state = estado;
         this.orderDate = LocalDateTime.now();
     }
@@ -61,10 +61,10 @@ public class Orders {
      */
     // Método para agregar un café a la orden
     public void agregarCafe(CoffeeSimplyfied cafe, int cantidad) {
-        if (this.cafes == null) {
-            this.cafes = new ArrayList<>();
+        if (this.coffee == null) {
+            this.coffee = new ArrayList<>();
         }
-        this.cafes.add(cafe);
+        this.coffee.add(cafe);
         calcularPrecioTotal();
     }
     
@@ -74,7 +74,7 @@ public class Orders {
      */
     // Método para calcular el precio total
     public double calcularPrecioTotal() {
-        this.totalValue = this.cafes.stream()
+        this.totalValue = this.coffee.stream()
                 .mapToDouble(entry -> entry.getPrice() * entry.getQuantity())
                 .sum();
         return this.totalValue;
@@ -117,16 +117,16 @@ public class Orders {
      * Obtiene la lista de cafés de la orden.
      * @return Lista de cafés
      */
-    public List<CoffeeSimplyfied> getCafes() {
-        return cafes;
+    public List<CoffeeSimplyfied> getCoffee() {
+        return coffee;
     }
 
     /**
      * Establece la lista de cafés de la orden y recalcula el precio total.
      * @param cafes Lista de cafés
      */
-    public void setCafes(List<CoffeeSimplyfied> cafes) {
-        this.cafes = cafes;
+    public void setCoffee(List<CoffeeSimplyfied> cafes) {
+        this.coffee = cafes;
         this.calcularPrecioTotal();
     }
 
@@ -187,7 +187,7 @@ public class Orders {
         return "Orders{" +
                 "id=" + id +
                 ", clientId=" + clientId +
-                ", numeroCafes=" + (cafes != null ? cafes.size() : 0) +
+                ", numeroCafes=" + (coffee != null ? coffee.size() : 0) +
                 ", precioTotal=" + totalValue +
                 ", fechaOrden=" + orderDate +
                 ", estado='" + state + '\'' +
