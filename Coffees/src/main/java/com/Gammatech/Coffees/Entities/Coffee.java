@@ -37,11 +37,22 @@ public class Coffee {
 
     @Column
     private String image;
-
+/**
+     * Constructor vacío necesario para JPA.
+     * Es requerido para que JPA pueda crear instancias de esta entidad.
+     */
     public Coffee() {
     	
     }
-
+    /**
+     * Constructor para crear un nuevo café.
+     * @param id Identificador del café
+     * @param name Nombre del café
+     * @param description Descripción del café
+     * @param price Precio del café
+     * @param stock Stock disponible del café
+     * @param image URL de la imagen del café
+     */
     public Coffee(Long id, String name, String description, double price, int stock, String image) {
         this.id = id + 1l;
         this.name = name;

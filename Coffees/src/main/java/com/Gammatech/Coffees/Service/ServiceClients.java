@@ -26,9 +26,14 @@ import com.Gammatech.Coffees.Repo.RepoClients;
  */
 @Service
 public class ServiceClients {
-
+    /**
+     * Repositorio de clientes para acceder a la base de datos.
+     */
     private final RepoClients repoClient;
-
+    /**
+     * Constructor del servicio de clientes.
+     * @param repoClient Repositorio de clientes
+     */
     public ServiceClients(RepoClients repoClient) {
         this.repoClient = repoClient;
     }

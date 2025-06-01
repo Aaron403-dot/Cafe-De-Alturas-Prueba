@@ -14,7 +14,9 @@ package com.Gammatech.Coffees.Controllers;
 public class AuthResponse {
 
     private String token;
-
+    /**
+     * Constructor por defecto.
+     */
     public AuthResponse(String token) {
         this.token = token;
     }

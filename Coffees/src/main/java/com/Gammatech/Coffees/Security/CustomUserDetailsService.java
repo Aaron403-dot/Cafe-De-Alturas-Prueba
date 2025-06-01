@@ -25,7 +25,9 @@ import com.Gammatech.Coffees.Service.ServiceUsers;
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
+    /**
+     * Servicio para acceder a los usuarios.
+     */
     private final ServiceUsers serviceUser;
     /**
      * Constructor for CustomUserDetailsService.

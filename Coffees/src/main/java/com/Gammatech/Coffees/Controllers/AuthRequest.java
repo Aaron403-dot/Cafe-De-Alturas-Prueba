@@ -16,7 +16,12 @@ public class AuthRequest {
     private String username;
 
     private String password;
-
+    /**
+     * 
+     * Crea una nueva instancia de AuthRequest.
+     * @param username Nombre de usuario
+     * @param password Contraseña del usuario
+     */
     public AuthRequest(String username, String password) {
         this.username = username;
         this.password = password;
@@ -25,7 +30,7 @@ public class AuthRequest {
     public String getUsername() {
         return username;
     }
-
+    
     public void setUsername(String username) {
         this.username = username;
     }

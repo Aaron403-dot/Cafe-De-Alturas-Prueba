@@ -12,9 +12,17 @@ import com.Gammatech.Coffees.Entities.Users;
  */
 @Repository
 public interface RepoUsers extends JpaRepository<Users, String> {
-
+    /**
+     * Verifica si existe un usuario por su nombre de usuario.
+     * @param username Nombre de usuario
+     * @return true si existe, false en caso contrario
+     */
     public boolean existsByUsername(String username);
-
+    /**
+     * Busca un usuario por su nombre de usuario.
+     * @param username Nombre de usuario
+     * @return Optional con el usuario encontrado
+     */
     public Optional<Users> findByUsername(String username);
 
 }

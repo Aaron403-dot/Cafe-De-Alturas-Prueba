@@ -30,7 +30,10 @@ import com.Gammatech.Coffees.Service.ServiceClients;
 public class CoffeeShopClientsController {
 	
 	private final ServiceClients serviceClients;
-	
+	/**
+	 * Constructor del controlador de clientes.
+	 * @param serviceClients Servicio para la gestión de clientes
+	 */
 	public CoffeeShopClientsController(ServiceClients serviceClients) {
 		this.serviceClients = serviceClients;
 	}

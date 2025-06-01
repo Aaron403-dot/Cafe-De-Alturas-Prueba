@@ -27,9 +27,14 @@ import jakarta.transaction.Transactional;
 @Service
 public class ServiceCoffee {
 
-
+    /**
+     * Repositorio de cafés para acceder a la base de datos.
+     */
     private final RepoCoffee repoCoffe;
-
+    /**
+     * Constructor del servicio de cafés.
+     * @param repoCoffe Repositorio de cafés
+     */
     public ServiceCoffee(RepoCoffee repoCoffe) {
         this.repoCoffe = repoCoffe;
     }

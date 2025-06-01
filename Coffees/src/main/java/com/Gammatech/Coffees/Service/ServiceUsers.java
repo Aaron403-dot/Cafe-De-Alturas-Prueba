@@ -20,9 +20,15 @@ import com.Gammatech.Coffees.Repo.RepoUsers;
  */
 @Service
 public class ServiceUsers {
-
+    /**
+     * Repositorio de usuarios para acceder a la base de datos.
+     */
     private final RepoUsers repoUsers;
     
+    /**
+     * Constructor del servicio de usuarios.
+     * @param repoUsers Repositorio de usuarios
+     */
     public ServiceUsers(RepoUsers repoUsers) {
         this.repoUsers = repoUsers;
     }

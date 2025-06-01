@@ -13,7 +13,13 @@ public class PageResponseCoffee {
     private int totalElements;
     private int totalPages;
     private int currentPage;
-
+    /**
+     * Constructor de la clase PageResponseCoffee.
+     * @param content Lista de cafés
+     * @param totalElements Número total de elementos
+     * @param totalPages Número total de páginas
+     * @param currentPage Página actual
+     */
     public PageResponseCoffee(List<Coffee> content, int totalElements, int totalPages, int currentPage) {
         this.coffes = content;
         this.totalElements = totalElements;

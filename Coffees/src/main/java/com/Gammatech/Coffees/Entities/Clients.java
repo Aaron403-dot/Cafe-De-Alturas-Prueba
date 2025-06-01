@@ -54,11 +54,23 @@ public class Clients {
 		this.order = order;
 	}
 
-	// Constructor vacío
+	/*
+	 * Constructor vacío necesario para JPA.
+	 * Es requerido para que JPA pueda crear instancias de esta entidad.
+	 */
 	public Clients() {
 	}
 	
-	// Constructor con todos los parámetros
+	/**
+	 * Constructor para crear un nuevo cliente.
+	 * Este constructor es útil para crear un cliente con todos sus datos.
+	 * @param id
+	 * @param nombre
+	 * @param apellidos
+	 * @param email
+	 * @param telefono
+	 * @param direccion
+	*/
 	public Clients(Long id, String nombre, String apellidos, String email, String telefono, String direccion) {
 		this.id = id;
 		this.name = nombre;

@@ -24,7 +24,13 @@ public class Users {
 
     public Users() {
     }
-
+    /**
+     * Constructor para crear un nuevo usuario.
+     *
+     * @param username Nombre de usuario
+     * @param password Contraseña del usuario
+     * @param role Rol del usuario (por defecto es "USER")
+     */
     public Users(String username, String password, String role) {
         this.username = username;
         this.password = password;

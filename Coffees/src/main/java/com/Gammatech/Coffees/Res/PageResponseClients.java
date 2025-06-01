@@ -13,7 +13,13 @@ public class PageResponseClients {
     private int totalElements;
     private int totalPages;
     private int currentPage;
-
+    /**
+     * Constructor de la clase PageResponseClients.
+     * @param content Lista de clientes
+     * @param totalElements Número total de elementos
+     * @param totalPages Número total de páginas
+     * @param currentPage Página actual
+     */
     public PageResponseClients(List<Clients> content, int totalElements, int totalPages, int currentPage) {
         this.clients = content;
         this.totalElements = totalElements;

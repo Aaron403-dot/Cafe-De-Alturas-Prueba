@@ -39,13 +39,20 @@ public class Orders {
     @Column(nullable = false)
     private String state; // PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA
     
-    // Constructor vacío
+    /*
+     * Constructor por defecto para JPA
+     * Es necesario para que JPA pueda crear instancias de la entidad
+     */
     public Orders() {
         this.coffee = new ArrayList<>();
         this.orderDate = LocalDateTime.now();
     }
     
-    // Constructor con parámetros básicos
+    /* * Constructor para crear una nueva orden con un ID y un cliente.
+     * @param id ID de la orden
+     * @param clientId ID del cliente que realiza la orden
+     * @param estado Estado inicial de la orden (PENDIENTE, EN_PROCESO, COMPLETADA, CANCELADA)
+     */
     public Orders(Long id, Long clientId, String estado) {
         this.id = id;
         this.clientId = clientId;

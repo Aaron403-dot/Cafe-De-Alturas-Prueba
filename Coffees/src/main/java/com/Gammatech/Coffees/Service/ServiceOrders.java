@@ -26,10 +26,19 @@ import com.Gammatech.Coffees.Repo.RepoOrders;
  */
 @Service
 public class ServiceOrders {
-
+    /**
+     * Repositorio de pedidos para acceder a la base de datos.
+     */
     private final RepoOrders repoOrder;
+    /**
+     * Servicio de café para validar cafés en las órdenes.
+     */
     private final ServiceCoffee serviceCoffe;
-
+    /**
+     * Constructor del servicio de pedidos.
+     * @param repoOrder Repositorio de pedidos
+     * @param serviceCoffe Servicio de café para validar cafés en las órdenes
+     */
     public ServiceOrders(RepoOrders repoOrder, ServiceCoffee serviceCoffe) {
         this.repoOrder = repoOrder;
         this.serviceCoffe = serviceCoffe;

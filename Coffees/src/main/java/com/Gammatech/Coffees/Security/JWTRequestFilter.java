@@ -35,10 +35,17 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter{
-
+    /**
+     * CustomUserDetailsService es un servicio que implementa UserDetailsService
+     * para cargar los detalles del usuario desde la base de datos.
+     * Es utilizado por Spring Security para autenticar usuarios.
+     */
     @Autowired
     private CustomUserDetailsService userDetailsService;
-
+    /**
+     * JWTUtils es una clase que proporciona utilidades para generar, validar y extraer información de tokens JWT (JSON Web Tokens).
+     * Utiliza una clave secreta para firmar y verificar los tokens, y maneja la creación de reclamaciones como el nombre de usuario y el rol del usuario.
+     */
     @Autowired
     private JWTUtils jwtUtil;
 

@@ -40,10 +40,19 @@ public class CoffeeSimplyfied {
     @Transient
     @ManyToOne
     private Orders orders;
-
+    /**
+     * Constructor vacío para JPA.
+     * Es necesario para que JPA pueda crear instancias de esta entidad.
+     */
     public CoffeeSimplyfied() {
     }
-
+    /**
+     * Constructor para crear un café simplificado con ID, precio y cantidad.
+     *
+     * @param id Identificador del café
+     * @param precio Precio del café
+     * @param cantidad Cantidad de este café en la orden
+     */
     public CoffeeSimplyfied(long id, double precio, int cantidad) {
         this.id = id;
         this.price = precio;

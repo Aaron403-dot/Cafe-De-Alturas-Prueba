@@ -40,7 +40,14 @@ public class AuthController {
     private final JWTUtils jwtUtils;
     private final PasswordEncoder encrypter;
 
-
+    /**
+     * Constructor del controlador de autenticación.
+     * @param serviceUsers Servicio para la gestión de usuarios
+     * @param authenticationManager Manejador de autenticación
+     * @param userDetailsService Servicio para cargar detalles del usuario
+     * @param encrypter Codificador de contraseñas
+     * @param jwtUtils Utilidades para generar y validar tokens JWT
+     */
     public AuthController(ServiceUsers serviceUsers, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, PasswordEncoder encrypter, JWTUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
@@ -57,8 +64,6 @@ public class AuthController {
      * @return ResponseEntity con el token JWT si las credenciales son válidas,
      * o un mensaje de error si las credenciales son inválidas.
      * @throws BadCredentialsException si las credenciales son inválidas
-     * @throws UsernameNotFoundException si el usuario no se encuentra
-     * @throws Exception si ocurre algún otro error durante el proceso de autenticación
      * @see AuthRequest
     */
 

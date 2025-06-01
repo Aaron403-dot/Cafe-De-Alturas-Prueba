@@ -20,9 +20,17 @@ import com.Gammatech.Coffees.Entities.Orders;
  */
 @Repository
 public interface RepoOrders extends JpaRepository<Orders, Long> {
-
+    /**
+     * Verifica si existe un pedido por su ID.
+     * @param clientId ID del pedido
+     * @return true si existe, false en caso contrario
+     */
     public List<Orders> findByClientId(long clientId);
-
+    /**
+     * Busca un pedido por su ID.
+     * @param id
+     * @return
+     */
     public Optional<Orders> findById(long id);
 
 

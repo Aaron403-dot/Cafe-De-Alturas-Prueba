@@ -40,7 +40,10 @@ public class CoffeeShopController {
 
 	private final ServiceCoffee serviceCoffe;
 
-
+	/**
+	 * Constructor del controlador de cafés.
+	 * @param serviceCoffe Servicio para la gestión de cafés
+	 */
 	public CoffeeShopController(ServiceCoffee serviceCoffe) {
 		this.serviceCoffe = serviceCoffe;
 	}
