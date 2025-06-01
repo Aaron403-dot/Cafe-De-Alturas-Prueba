@@ -7,7 +7,9 @@ package com.Gammatech.Coffees.Controllers;
 
 /**
  *
- * @author Usuario
+ * Clase de respuesta para la autenticación de usuarios.
+ * Contiene el token JWT generado al iniciar sesión.
+ * @author Aaron
  */
 public class AuthRequest {
 

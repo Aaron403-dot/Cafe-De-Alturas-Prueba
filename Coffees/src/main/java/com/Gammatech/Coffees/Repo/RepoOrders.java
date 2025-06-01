@@ -15,7 +15,8 @@ import com.Gammatech.Coffees.Entities.Orders;
 
 /**
  *
- * @author Usuario
+ * Repositorio para la entidad Orders.
+ * @author Aaron
  */
 @Repository
 public interface RepoOrders extends JpaRepository<Orders, Long> {

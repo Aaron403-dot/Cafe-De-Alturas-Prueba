@@ -22,6 +22,19 @@ import com.Gammatech.Coffees.Controllers.AuthRequest;
 import com.Gammatech.Coffees.Controllers.AuthResponse;
 import com.Gammatech.Coffees.Entities.Coffee;
 
+/**
+ * pruebas de integración para la entidad Coffee
+ * Estas pruebas verifican que un usuario administrador pueda crear y leer cafés.
+ * Se asume que el usuario administrador ya ha sido creado en la base de datos
+ * antes de ejecutar las pruebas, utilizando el script user_creation.sql.
+ * * Las pruebas utilizan TestRestTemplate para realizar solicitudes HTTP a la API
+ * de Coffee.
+ * * Se utiliza la anotación @Sql para ejecutar un script SQL antes de las pruebas,
+ * lo que permite preparar la base de datos con un usuario administrador.
+ * @author Aaron
+ * @version 1.0
+ */
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Sql(scripts = "/user_creation.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)

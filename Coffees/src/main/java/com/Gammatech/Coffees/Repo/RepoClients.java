@@ -12,7 +12,9 @@ import com.Gammatech.Coffees.Entities.Clients;
 
 /**
  *
- * @author Usuario
+ * Repositorio para la entidad Clients.
+ * Proporciona operaciones CRUD para la entidad Clients.
+ * @author Aaron
  */
 @Repository
 public interface RepoClients extends JpaRepository<Clients, Long> {

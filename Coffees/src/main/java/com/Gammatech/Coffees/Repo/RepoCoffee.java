@@ -12,7 +12,9 @@ import com.Gammatech.Coffees.Entities.Coffee;
 
 /**
  *
- * @author Usuario
+ * Repositorio para la entidad Coffee.
+ * Proporciona operaciones CRUD para la entidad Coffee.
+ * @author Aaron
  */
 @Repository
 public interface RepoCoffee extends JpaRepository<Coffee, Long> {

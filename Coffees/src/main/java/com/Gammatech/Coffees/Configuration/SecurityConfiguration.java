@@ -25,19 +25,30 @@ import com.Gammatech.Coffees.Security.JWTRequestFilter;
 
 /**
  *
- * @author Usuario
+ * * Configuración de seguridad para la aplicación.
+ * * Esta clase configura la seguridad web de la aplicación, incluyendo la autenticación
+ * * basada en JWT, la gestión de sesiones y los filtros de seguridad.
+ * @author Aaron
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
+    // Filtro para manejar las solicitudes JWT
     @Autowired
     private JWTRequestFilter jwtRequestFilter;
-
+    // Servicio personalizado para obtener detalles del usuario
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    /**
+     * Configura la cadena de filtros de seguridad.
+     * 
+     * @param http la configuración de seguridad HTTP
+     * @return la cadena de filtros de seguridad configurada
+     * @throws Exception si ocurre un error durante la configuración
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -55,6 +66,13 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * Proveedor de autenticación DAO.
+     * 
+     * @param passwordEncoder el codificador de contraseñas
+     * @return el proveedor de autenticación DAO configurado
+     */
+
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -62,6 +80,14 @@ public class SecurityConfiguration {
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
+
+    /**
+     * Bean para el administrador de autenticación.
+     * 
+     * @param authConfig la configuración de autenticación
+     * @return el administrador de autenticación configurado
+     * @throws Exception si ocurre un error durante la configuración
+     */
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {

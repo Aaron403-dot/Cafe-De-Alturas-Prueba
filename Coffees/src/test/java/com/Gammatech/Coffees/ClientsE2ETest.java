@@ -30,6 +30,7 @@ import com.Gammatech.Coffees.Entities.Clients;
 
 /**
  *
+ * Clase de prueba de integración para los endpoints relacionados con los clientes.
  * @author Aaron
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -37,12 +38,24 @@ import com.Gammatech.Coffees.Entities.Clients;
 @Sql(scripts = "/user_creation.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 public class ClientsE2ETest {
     
+    /**
+     * Puerto en el que se ejecuta la aplicación durante las pruebas.
+     * Se inyecta automáticamente por Spring Boot.
+     */
     @LocalServerPort
     private int port;
 
+    /**
+     * TestRestTemplate es una herramienta de Spring Boot para realizar pruebas de integración.
+     * Permite enviar solicitudes HTTP a los endpoints de la aplicación y recibir respuestas.
+     */
     @Autowired
     private TestRestTemplate restTemplate;
 
+    /**
+     * Prueba que un usuario administrador puede crear un cliente.
+     * Crea un cliente con datos de prueba y verifica que se crea correctamente.
+     */
     @Test
     public void AdminCreateClient(){
         //Preparación
@@ -68,6 +81,10 @@ public class ClientsE2ETest {
         assertEquals(client.getName(), response.getBody().getName());
     }
     
+    /**
+     * Prueba que un usuario administrador no puede crear un cliente si no tiene los permisos adecuados.
+     * Intenta crear un cliente con un usuario que no es administrador y verifica que se recibe un FORBIDDEN o UNAUTHORIZED.
+     */
     @Test
     public void NonAdminCannotCreateClient() {
         // Preparación
@@ -90,7 +107,12 @@ public class ClientsE2ETest {
         // Verificación: Debe ser FORBIDDEN o UNAUTHORIZED
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
-    
+
+
+    /**
+     * Prueba que un usuario administrador puede leer un cliente existente.
+     * Crea un cliente, lo lee y verifica que los datos sean correctos.
+     */
     @Test
     public void AdminCanReadExistingClient() {
         // Crear un cliente de prueba primero
@@ -122,6 +144,11 @@ public class ClientsE2ETest {
         assertEquals(createdId, response.getBody().getId());
     }
     
+    /**
+     * Prueba que un usuario administrador no puede leer un cliente inexistente.
+     * Intenta leer un cliente con un ID que no existe y verifica que se recibe un NOT FOUND.
+     */
+
     @Test
     public void NonAdminCannotDeleteClient() {
         // Preparación
@@ -138,6 +165,12 @@ public class ClientsE2ETest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
     
+    /**
+     * Prueba que un usuario administrador puede leer múltiples clientes por sus IDs.
+     * Crea 3 clientes, verifica que se hayan creado correctamente y luego los lee uno por uno.
+     * 
+     */
+
     @Test
     public void AdminCanReadExistingClients_MultipleIds() {
         String token = getTokenForAdminUser();
@@ -173,6 +206,11 @@ public class ClientsE2ETest {
             assertEquals(createdIds[i], response.getBody().getId(), "Id match for id=" + createdIds[i]);
         }
     }
+
+    /**
+     * Prueba que un usuario administrador puede actualizar un cliente existente.
+     * Crea un cliente, lo actualiza y verifica que los cambios se hayan aplicado correctamente.
+     */
 
     @Test
     public void AdminCanUpdateClient() {
@@ -210,6 +248,12 @@ public class ClientsE2ETest {
         assertEquals("999999999", updateResponse.getBody().getPhone());
     }
 
+    /**
+     * Prueba que un usuario administrador puede crear múltiples clientes y rastrear sus IDs.
+     * Crea 3 clientes, verifica que se hayan creado correctamente y luego los lee uno por uno.
+     * 
+     */
+
     @Test
     public void AdminCanCreateAndTrackMultipleClients() {
         String token = getTokenForAdminUser();
@@ -246,6 +290,12 @@ public class ClientsE2ETest {
     }
 
 
+    /**
+     * Obtiene un token JWT válido para el usuario administrador.
+     * Realiza una petición al endpoint de autenticación usando las credenciales del admin.
+     * Si la autenticación es exitosa, retorna el token. Si falla, imprime el error recibido.
+     * @return el token JWT si la autenticación es exitosa, null en caso contrario
+     */
     private String getTokenForAdminUser() {
         // Preparación
         AuthRequest authRequest = new AuthRequest("AdminUser", "Admin123");
@@ -262,6 +312,14 @@ public class ClientsE2ETest {
 
         return Objects.requireNonNull(response.getBody()).getToken();
     }
+
+    /**
+     * 
+     * Obtiene un token JWT válido para un usuario promedio.
+     * Realiza una petición al endpoint de autenticación usando las credenciales del usuario promedio.
+     * Si la autenticación es exitosa, retorna el token. Si falla, imprime el error recibido.
+     * @return el token JWT si la autenticación es exitosa, null en caso contrario
+     */
 
     private String getTokenForAverageUser() {
         // Preparación

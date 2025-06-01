@@ -36,6 +36,11 @@ public class JWTUtils {
 
     private static final long EXPIRATIONTIME = 1000 * 60 * 60 * 12; // 12 horas en milisegundos
 
+    /**
+     * Genera un token JWT firmado con la clave secreta y con las reclamaciones del usuario.
+     * @param userDetails Los detalles del usuario para los cuales se generará el token.
+     * @return El token JWT generado como una cadena.
+     */
     public String generateToken(UserDetails userDetails) {
         try {
             JWSSigner signer = new MACSigner(SECRETKEY.getBytes(StandardCharsets.UTF_8)); // Crear un firmante con la clave secreta en formato UTF-8
@@ -60,6 +65,11 @@ public class JWTUtils {
         }
     }
 
+    /**
+     * Extrae el nombre de usuario del token JWT.
+     * @param token El token JWT del cual se extraerá el nombre de usuario.
+     * @return El nombre de usuario extraído del token.
+     */
     
     public String extractUsername(String token) {
         try {
@@ -71,6 +81,12 @@ public class JWTUtils {
         }
     }
 
+    /**
+     * Valida el token JWT verificando su firma, el nombre de usuario y la fecha de expiración.
+     * @param token El token JWT a validar.
+     * @param userDetails Los detalles del usuario para comparar con el token.
+     * @return true si el token es válido, false en caso contrario.
+     */
     public boolean validateToken(String token, UserDetails userDetails) {
         try {
             SignedJWT jwt = SignedJWT.parse(token);

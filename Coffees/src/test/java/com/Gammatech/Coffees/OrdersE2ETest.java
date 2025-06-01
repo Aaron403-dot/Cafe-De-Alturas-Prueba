@@ -22,6 +22,14 @@ import com.Gammatech.Coffees.Controllers.AuthRequest;
 import com.Gammatech.Coffees.Controllers.AuthResponse;
 import com.Gammatech.Coffees.Entities.Orders;
 
+/**
+ * * pruebas de integración para la entidad Orders
+ * * Estas pruebas verifican que un usuario administrador pueda crear y leer órdenes.
+ * * Se asume que el usuario administrador ya ha sido creado en la base de datos
+ * * antes de ejecutar las pruebas, utilizando el script user_creation.sql.
+ * @author Aaron
+ */
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Sql(scripts = "/user_creation.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
